@@ -1,4 +1,4 @@
-## 2016-09-16 v0.0.3plus
+## 2016-09-16 v0.0.3
 - Fixed requirements, etc, added prometheus_client
 - Added config
 - added in custom functions file
