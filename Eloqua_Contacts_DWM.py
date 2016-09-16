@@ -44,7 +44,7 @@ myFilter = elq.FilterExists(name='DWM: Python Feeder', existsType='ContactFilter
 
 # create bulk export
 exportDefName = jobName + str(datetime.now())
-exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=defname)
+exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName)
 logging.info("export definition created: " + exportDef['uri'])
 
 ## Create sync
