@@ -4,7 +4,7 @@ from datetime import datetime
 import sys, os, logging
 from pymongo import MongoClient
 from collections import OrderedDict
-
+from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 
 ###############################################################################
 ## Load custom functions
