@@ -82,7 +82,7 @@ if len(data)>0:
     client = MongoClient(os.environ['MONGODB_URL'], document_class=OrderedDict)
     db = client['dwmdev']
 
-    config = db.config.find_one({"configName": "MVP Config"})
+    config = db.config.find_one({"configName": "Eloqua_Contacts_DWM"})
 
     logging.info("Retrieved config from MongoDB as an OrderedDict")
 
