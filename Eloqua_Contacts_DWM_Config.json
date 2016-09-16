@@ -1,0 +1,321 @@
+[{
+  "configName": "Eloqua_Contacts_DWM",
+  "createdBy": "jecolema",
+  "createdDate": 1467575779,
+  "lastModifiedBy": "jecolema",
+  "lastModifiedDate": 1467575779,
+  "fields": {
+
+    "salutation": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {}
+    },
+
+    "firstName": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "lastName": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "busPhone": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "mobilePhone": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "fax": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "address1": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "address2": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "address3": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "city": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "stateProvince": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {}
+    },
+
+    "zipPostalCode": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "country": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {
+        "1": {
+          "type": "deriveRegex",
+          "fieldSet": ["emailAddress"],
+          "overwrite": false,
+          "blankIfNoMatch": false
+        },
+        "2": {
+          "type": "deriveValue",
+          "fieldSet": ["visitorCountryIP"],
+          "overwrite": false,
+          "blankIfNoMatch": false
+        },
+        "3": {
+          "type": "deriveValue",
+          "fieldSet": ["visitorCountryDNS"],
+          "overwrite": false,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "company": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {
+        "1": {
+          "type": "copyValue",
+          "fieldSet": ["companyDemandBase"],
+          "overwrite": false,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "department": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["jobTitle"],
+          "overwrite": true,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "industry": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["industryDemandBase"],
+          "overwrite": false,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "annualRevenue": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["annualRevenueDemandBase"],
+          "overwrite": false,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "numberOfEmployees": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["numberOfEmployeesDemandBase"],
+          "overwrite": false,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "jobTitle": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "derive": {}
+    },
+
+    "jobRole": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {
+        "1": {
+          "type": "deriveRegex",
+          "fieldSet": ["jobTitle"],
+          "overwrite": true,
+          "blankIfNoMatch": false
+        },
+        "2": {
+          "type": "deriveValue",
+          "fieldSet": ["jobTitle"],
+          "overwrite": true,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "jobLevel": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["jobRole"],
+          "overwrite": true,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "jobFunction": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {}
+    },
+
+    "languagePreference": {
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "derive": {}
+    },
+
+    "persona": {
+      "lookup": [],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["jobRole", "department"],
+          "overwrite": true,
+          "blankIfNoMatch": true
+        }
+      }
+    },
+
+    "subRegion": {
+      "lookup": [],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["country"],
+          "overwrite": true,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "superRegion": {
+      "lookup": [],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["country"],
+          "overwrite": true,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "companySize": {
+      "lookup": [],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["annualRevenue", "numberOfEmployees"],
+          "overwrite": true,
+          "blankIfNoMatch": true
+        }
+      }
+    },
+
+    "vertical": {
+      "lookup": [],
+      "derive": {
+        "2": {
+          "type": "copyValue",
+          "fieldSet": ["industry"],
+          "overwrite": true,
+          "blankIfNoMatch": false
+        },
+        "1": {
+          "type": "deriveRegex",
+          "fieldSet": ["emailAddress"],
+          "overwrite": true,
+          "blankIfNoMatch": false
+        }
+      }
+    },
+
+    "coreBasedStatisticalArea": {
+      "lookup": [],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["zipPostalCode", "country"],
+          "overwrite": true,
+          "blankIfNoMatch": true
+        },
+        "2": {
+          "type": "deriveValue",
+          "fieldSet": ["city", "stateProvince", "country"],
+          "overwrite": true,
+          "blankIfNoMatch": true
+        }
+      }
+    },
+
+    "combinedStatisticalArea": {
+      "lookup": [],
+      "derive": {
+        "1": {
+          "type": "deriveValue",
+          "fieldSet": ["zipPostalCode", "country"],
+          "overwrite": true,
+          "blankIfNoMatch": true
+        },
+        "2": {
+          "type": "deriveValue",
+          "fieldSet": ["city", "stateProvince", "country"],
+          "overwrite": true,
+          "blankIfNoMatch": true
+        }
+      }
+    }
+
+  },
+
+  "userDefinedFunctions": {
+    "beforeGenericValidation": {},
+    "beforeGenericRegex": {},
+    "beforeFieldSpecificValidation": {},
+    "beforeFieldSpecificRegex": {},
+    "beforeNormalization": {},
+    "beforeNormalizationRegex": {},
+    "beforeDeriveData": {
+      "1": "CleanZipcodeUS",
+      "2": "CleanAnnualRevenue"
+    },
+    "afterProcessing": {}
+  },
+  "history": {
+    "writeContactHistory": true,
+    "returnHistoryId":false,
+    "returnHistoryField": "historyId",
+    "histIdField": {"name": "ContactID", "value": "ContactID"}
+  }
+}]

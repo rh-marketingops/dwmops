@@ -4,7 +4,7 @@ from datetime import datetime
 import sys, os, logging
 from pymongo import MongoClient
 from collections import OrderedDict
-
+from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 
 ###############################################################################
 ## Load custom functions
@@ -82,7 +82,7 @@ if len(data)>0:
     client = MongoClient(os.environ['MONGODB_URL'], document_class=OrderedDict)
     db = client['dwmdev']
 
-    config = db.config.find_one({"configName": "MVP Config"})
+    config = db.config.find_one({"configName": "Eloqua_Contacts_DWM"})
 
     logging.info("Retrieved config from MongoDB as an OrderedDict")
 
