@@ -36,5 +36,6 @@ fieldset = {
     "industryDemandBase": "{{Contact.Field(C_From_DemandBase__Industry1)}}",
     "annualRevenueDemandBase": "{{Contact.Field(C_From_DemandBase__Annual_Revenue1)}}",
     "numberOfEmployeesDemandBase": "{{Contact.Field(C_From_DemandBase__Number_of_Employees1)}}",
+    "SystemExternalProcessingFlags": "{{Contact.Field(C_SYSTEM_External_Processing_Flags1)}}",
     "ContactID": "{{Contact.Id}}"
 }
