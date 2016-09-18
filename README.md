@@ -1,6 +1,6 @@
 # Intro
 
-The `dwm` package is a standalone set of business logic for maintaining marketing database quality. This repo is an Openshift-based implementation which applies said package to an Eloqua instance. 
+The `dwm` package is a standalone set of business logic for maintaining marketing database quality. This repo is an Openshift-based implementation which applies said package to an Eloqua instance.
 
 # Architecture
 
@@ -40,4 +40,5 @@ This implementation use ITOS (Red Hat IT-Hosted Openshift v2; comparable to Open
 
 # TODO
 - Build out as queue-based
+  - shift monitoring away from being entirely based on pushgateway to having a pingable service running
 - Build an API operating off the same MongoDB
