@@ -106,6 +106,12 @@ if len(data)>0:
     ## Import data back to Eloqua
     ###############################################################################
 
+    ## Update external processing flags
+
+    for row in dataOut:
+
+        row['SystemExternalProcessingFlags'] = row['SystemExternalProcessingFlags'].replace(';hourlyDWM;', '')
+
     importDefName = 'dwmtest' + str(datetime.now())
     importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress')
     logging.info("Import definition created: " + importDef['uri'])
