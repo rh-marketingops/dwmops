@@ -54,7 +54,7 @@ status = elq.CheckSyncStatus(syncObject=exportSync)
 logging.info("sync successful; retreiving data")
 
 ## Retrieve data
-data = elq.GetSyncedData(defObject=exportDef) ## TODO: limit to 35000 contacts
+data = elq.GetSyncedData(defObject=exportDef, retrieveLimit=30000)
 logging.info("# of records:" + str(len(data)))
 
 ## Setup
@@ -105,6 +105,12 @@ if len(data)>0:
     ###############################################################################
     ## Import data back to Eloqua
     ###############################################################################
+
+    ## Update external processing flags
+
+    for row in dataOut:
+
+        row['SystemExternalProcessingFlags'] = row['SystemExternalProcessingFlags'].replace(';hourlyDWM;', '')
 
     importDefName = 'dwmtest' + str(datetime.now())
     importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress')
