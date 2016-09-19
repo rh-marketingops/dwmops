@@ -53,6 +53,8 @@ This implementation use ITOS (Red Hat IT-Hosted Openshift v2; comparable to Open
   - https://github.com/icflorescu/openshift-cartridge-mongodb
 - 10GB storage
 
+### Cron
+
 # TODO
 - Build out as queue-based
   - shift monitoring away from being entirely based on pushgateway to having a pingable service running
