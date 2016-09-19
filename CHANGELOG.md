@@ -1,3 +1,7 @@
+## 2016-09-19 v0.0.5
+- Added cron job
+- Small updates to README
+
 ## 2016-09-18 v0.0.4
 - Added logic to reset "SYSTEM: External Processing Flags"
 - Upgraded pyeloqua==0.2.5
