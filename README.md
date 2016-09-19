@@ -8,7 +8,7 @@ The `dwm` package is a standalone set of business logic for maintaining marketin
 
 The data flow of this app has three components:
 1. Export the specified contacts from Eloqua via Bulk API (using Python package `pyeloqua`)
-2. Run contact records through DWM
+2. If >0 contacts returned, run records through DWM
 3. Import contacts back into Eloqua
 
 ## Custom functions
