@@ -4,10 +4,25 @@ The `dwm` package is a standalone set of business logic for maintaining marketin
 
 # Architecture
 
+## Data flow
+
 The data flow of this app has three components:
 1. Export the specified contacts from Eloqua via Bulk API (using Python package `pyeloqua`)
 2. Run contact records through DWM
 3. Import contacts back into Eloqua
+
+## Custom functions
+
+Current implementation has two custom functions:
+- `CleanZipcodeUS`
+  - Apply zipcode standardization to contacts where `country='US'`
+  - Takes only first string of numbers before a non-digit character
+  - Strips down to first 5 digits
+  - Adds leading 0s which may have been stripped by Excel auto-formatting
+- `CleanAnnualRevenue`
+  - Remove any "," or "$" characters
+  - Try converting to integer
+    - If successful, group into pre-determined `annualRevenue` bucket
 
 # Setup
 
