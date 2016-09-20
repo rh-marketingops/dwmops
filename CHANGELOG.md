@@ -1,3 +1,6 @@
+## 2016-09-20 v0.0.7
+- Upgrade to pyeloqua v0.2.6 to fix sync count reporting issue
+
 ## 2016-09-20 v0.0.6
 - Upgrade to dwm v0.0.5 (hotfix); this loops through derive fields by the config order, not by data order
 
