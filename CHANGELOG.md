@@ -1,3 +1,6 @@
+## 2016-09-20 v0.0.8
+- Lower count to 20,000 records at once, until queuing is setup
+
 ## 2016-09-20 v0.0.7
 - Upgrade to pyeloqua v0.2.6 to fix sync count reporting issue
 
