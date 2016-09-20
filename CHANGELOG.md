@@ -1,3 +1,6 @@
+## 2016-09-20 v0.0.6
+- Upgrade to dwm v0.0.5 (hotfix); this loops through derive fields by the config order, not by data order
+
 ## 2016-09-19 v0.0.5
 - Added cron job
 - Small updates to README
