@@ -54,7 +54,7 @@ status = elq.CheckSyncStatus(syncObject=exportSync)
 logging.info("sync successful; retreiving data")
 
 ## Retrieve data
-data = elq.GetSyncedData(defObject=exportDef, retrieveLimit=20000)
+data = elq.GetSyncedData(defObject=exportDef, retrieveLimit=15000)
 logging.info("# of records:" + str(len(data)))
 
 ## Setup
