@@ -7,7 +7,7 @@
   "fields": {
 
     "salutation": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {}
     },
 
@@ -57,7 +57,7 @@
     },
 
     "stateProvince": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {}
     },
 
@@ -67,10 +67,10 @@
     },
 
     "country": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {
         "1": {
-          "type": "deriveRegex",
+          "type": "deriveIncludes",
           "fieldSet": ["emailAddress"],
           "overwrite": false,
           "blankIfNoMatch": false
@@ -91,7 +91,7 @@
     },
 
     "company": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normIncludes"],
       "derive": {
         "1": {
           "type": "copyValue",
@@ -103,7 +103,7 @@
     },
 
     "department": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveValue",
@@ -115,7 +115,7 @@
     },
 
     "industry": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveValue",
@@ -127,7 +127,7 @@
     },
 
     "annualRevenue": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveValue",
@@ -139,7 +139,7 @@
     },
 
     "numberOfEmployees": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveValue",
@@ -156,10 +156,10 @@
     },
 
     "jobRole": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {
         "1": {
-          "type": "deriveRegex",
+          "type": "deriveIncludes",
           "fieldSet": ["jobTitle"],
           "overwrite": true,
           "blankIfNoMatch": false
@@ -174,7 +174,7 @@
     },
 
     "jobLevel": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveValue",
@@ -186,12 +186,12 @@
     },
 
     "jobFunction": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {}
     },
 
     "languagePreference": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
       "derive": {}
     },
 
