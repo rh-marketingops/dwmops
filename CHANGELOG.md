@@ -1,3 +1,7 @@
+## 2016-09-22 v0.0.9
+- Upgrade to dwm v0.0.6
+- Add console dump log to catch warnings/errors
+
 ## 2016-09-20 v0.0.8
 - Lower count to 20,000 records at once, until queuing is setup
 
