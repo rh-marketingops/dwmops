@@ -62,6 +62,9 @@ total = 0
 warning = 0
 errored = 0
 success = 0
+dwmTime = 0
+dwmStart = 0
+dwmEnd = 0
 
 ## Only do the processing if there are contacts to process
 if len(data)>0:
@@ -98,7 +101,9 @@ if len(data)>0:
     logging.info("Connected to mongo")
 
     ## Run DWM
+    dwmStart = datetime.now()
     dataOut = dwm.dwmAll(data=data, db=db, config=config, udfNamespace=__name__)
+    dwmEnd = datetime.now()
 
     client.close()
 
@@ -135,6 +140,10 @@ else:
 
 jobEnd = datetime.now()
 jobTime = (jobEnd-jobStart).total_seconds()
+try:
+    dwmTime = (dwmEnd=dwmStart).total_seconds()
+except:
+    dwmTime = 0
 
 ## Push monitoring stats to Prometheus
 registry = CollectorRegistry()
@@ -150,5 +159,7 @@ w = Gauge(metricPrefix + 'total_records_warning', 'Total number of records warne
 w.set(warning)
 s = Gauge(metricPrefix + 'total_records_success', 'Total number of records successful in last batch', registry=registry)
 s.set(success)
+z = Gauge(metricPrefix + 'total_seconds_dwm', 'Total number of seconds to complete DWM processing', registry=registry)
+z.set(dwmTime)
 
 push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)
