@@ -40,7 +40,7 @@ logging.info("Eloqua session established")
 from Eloqua_Contacts_ExportFields import fieldset
 
 ## Set filter
-myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
+myFilter = elq.FilterExists(name='DWM - Processing Queue', existsType='ContactList')
 
 # create bulk export
 exportDefName = jobName + str(datetime.now())
@@ -111,14 +111,12 @@ if len(data)>0:
     ## Import data back to Eloqua
     ###############################################################################
 
-    ## Update external processing flags
+    # create sync action to remove from shared list on import
 
-    for row in dataOut:
-
-        row['SystemExternalProcessingFlags'] = row['SystemExternalProcessingFlags'].replace(';hourlyDWM;', '')
+    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Processing Queue', listType='contacts')
 
     importDefName = 'dwmtest' + str(datetime.now())
-    importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress')
+    importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress', syncAction=syncAction)
     logging.info("Import definition created: " + importDef['uri'])
     postInData = elq.PostSyncData(data=dataOut, defObject=importDef, maxPost=20000)
     logging.info("Data import finished: " + str(datetime.now()))
