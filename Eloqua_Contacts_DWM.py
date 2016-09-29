@@ -139,7 +139,7 @@ else:
 jobEnd = datetime.now()
 jobTime = (jobEnd-jobStart).total_seconds()
 try:
-    dwmTime = (dwmEnd=dwmStart).total_seconds()
+    dwmTime = (dwmEnd-dwmStart).total_seconds()
 except:
     dwmTime = 0
 
