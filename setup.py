@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='DWMOps',
-      version='0.0.9',
+      version='0.0.10',
       description='Data Washing Machine implemented on Openshift',
       author='Jeremy Coleman',
       author_email='jecolema@redhat.com'
