@@ -7,7 +7,7 @@
   "fields": {
 
     "salutation": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {}
     },
 
@@ -57,7 +57,7 @@
     },
 
     "stateProvince": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {}
     },
 
@@ -67,7 +67,7 @@
     },
 
     "country": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveIncludes",
@@ -103,7 +103,7 @@
     },
 
     "department": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveValue",
@@ -115,7 +115,7 @@
     },
 
     "industry": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveValue",
@@ -127,7 +127,7 @@
     },
 
     "annualRevenue": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveValue",
@@ -139,7 +139,7 @@
     },
 
     "numberOfEmployees": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveValue",
@@ -156,7 +156,7 @@
     },
 
     "jobRole": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveIncludes",
@@ -174,7 +174,7 @@
     },
 
     "jobLevel": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {
         "1": {
           "type": "deriveValue",
@@ -186,12 +186,12 @@
     },
 
     "jobFunction": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {}
     },
 
     "languagePreference": {
-      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normRegex", "normIncludes"],
+      "lookup": ["genericLookup", "genericRegex", "fieldSpecificRegex", "fieldSpecificLookup", "normLookup", "normIncludes"],
       "derive": {}
     },
 
@@ -253,7 +253,7 @@
           "blankIfNoMatch": false
         },
         "1": {
-          "type": "deriveRegex",
+          "type": "deriveIncludes",
           "fieldSet": ["emailAddress"],
           "overwrite": true,
           "blankIfNoMatch": false

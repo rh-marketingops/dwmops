@@ -1,3 +1,9 @@
+## 2016-09-29 v0.0.10
+- Upgrade to pyeloqua v0.2.7
+- Now feeding based on shared list; exports from shared list and uses sync action on import to remove from shared list
+- Officially added some console logging to the cron bash
+- Officially added actual dwmAll processing time stat to push to Prometheus
+
 ## 2016-09-22 v0.0.9
 - Upgrade to dwm v0.0.6
 - Add console dump log to catch warnings/errors

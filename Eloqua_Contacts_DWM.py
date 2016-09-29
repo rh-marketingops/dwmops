@@ -40,7 +40,7 @@ logging.info("Eloqua session established")
 from Eloqua_Contacts_ExportFields import fieldset
 
 ## Set filter
-myFilter = elq.FilterExists(name='DWM: Python Feeder', existsType='ContactFilter')
+myFilter = elq.FilterExists(name='DWM - Processing Queue', existsType='ContactList')
 
 # create bulk export
 exportDefName = jobName + str(datetime.now())
@@ -54,7 +54,7 @@ status = elq.CheckSyncStatus(syncObject=exportSync)
 logging.info("sync successful; retreiving data")
 
 ## Retrieve data
-data = elq.GetSyncedData(defObject=exportDef, retrieveLimit=15000)
+data = elq.GetSyncedData(defObject=exportDef, retrieveLimit=20000)
 logging.info("# of records:" + str(len(data)))
 
 ## Setup
@@ -62,6 +62,9 @@ total = 0
 warning = 0
 errored = 0
 success = 0
+dwmTime = 0
+dwmStart = 0
+dwmEnd = 0
 
 ## Only do the processing if there are contacts to process
 if len(data)>0:
@@ -98,7 +101,9 @@ if len(data)>0:
     logging.info("Connected to mongo")
 
     ## Run DWM
+    dwmStart = datetime.now()
     dataOut = dwm.dwmAll(data=data, db=db, config=config, udfNamespace=__name__)
+    dwmEnd = datetime.now()
 
     client.close()
 
@@ -106,14 +111,12 @@ if len(data)>0:
     ## Import data back to Eloqua
     ###############################################################################
 
-    ## Update external processing flags
+    # create sync action to remove from shared list on import
 
-    for row in dataOut:
-
-        row['SystemExternalProcessingFlags'] = row['SystemExternalProcessingFlags'].replace(';hourlyDWM;', '')
+    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Processing Queue', listType='contacts')
 
     importDefName = 'dwmtest' + str(datetime.now())
-    importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress')
+    importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress', syncActions=[syncAction])
     logging.info("Import definition created: " + importDef['uri'])
     postInData = elq.PostSyncData(data=dataOut, defObject=importDef, maxPost=20000)
     logging.info("Data import finished: " + str(datetime.now()))
@@ -135,6 +138,10 @@ else:
 
 jobEnd = datetime.now()
 jobTime = (jobEnd-jobStart).total_seconds()
+try:
+    dwmTime = (dwmEnd-dwmStart).total_seconds()
+except:
+    dwmTime = 0
 
 ## Push monitoring stats to Prometheus
 registry = CollectorRegistry()
@@ -150,5 +157,7 @@ w = Gauge(metricPrefix + 'total_records_warning', 'Total number of records warne
 w.set(warning)
 s = Gauge(metricPrefix + 'total_records_success', 'Total number of records successful in last batch', registry=registry)
 s.set(success)
+z = Gauge(metricPrefix + 'total_seconds_dwm', 'Total number of seconds to complete DWM processing', registry=registry)
+z.set(dwmTime)
 
 push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)
