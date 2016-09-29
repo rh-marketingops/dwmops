@@ -40,7 +40,7 @@ logging.info("Eloqua session established")
 from Eloqua_Contacts_ExportFields import fieldset
 
 ## Set filter
-myFilter = elq.FilterExists(name='DWM: Python Feeder', existsType='ContactFilter')
+myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
 
 # create bulk export
 exportDefName = jobName + str(datetime.now())
