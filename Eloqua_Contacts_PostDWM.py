@@ -69,7 +69,7 @@ if size>0:
     importDefName = 'dwmtest' + str(datetime.now())
     importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress', syncActions=[syncAction])
     logging.info("Import definition created: " + importDef['uri'])
-    postInData = elq.PostSyncData(data=dataOut, defObject=importDef, maxPost=20000)
+    postInData = elq.PostSyncData(data=jobClean, defObject=importDef, maxPost=20000)
     logging.info("Data import finished: " + str(datetime.now()))
 
     ## agg stats about success of import
@@ -83,6 +83,8 @@ if size>0:
         if row['status'] == 'errored':
             errored += row['count']
             logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
+
+    processedQueue.complete(job)
 
 else:
 
