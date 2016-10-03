@@ -44,7 +44,7 @@ processedQueue = Queue(db = db, queueName = 'processedQueue')
 
 size = processedQueue.getQueueSize()
 
-logging.info('Records waiting in queue: ' + size)
+logging.info('Records waiting in queue: ' + str(size))
 
 ## Setup
 total = 0

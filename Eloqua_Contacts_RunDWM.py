@@ -37,7 +37,7 @@ exportQueue = Queue(db = dbQueue, queueName = 'dwmQueue')
 
 size = exportQueue.getQueueSize()
 
-logging.info('Records waiting in queue: ' + size)
+logging.info('Records waiting in queue: ' + str(size))
 
 total = 0
 
@@ -47,7 +47,7 @@ if size>0:
 
     job = exportQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 400)
 
-    logging.info('current job size: ' + len(job))
+    logging.info('current job size: ' + str(len(job)))
 
     total = len(job)
 
