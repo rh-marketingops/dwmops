@@ -65,7 +65,7 @@ if size>0:
     ## So, just close it out and create a new connection to pass to DWM
 
     clientConfig = MongoClient(os.environ['MONGODB_URL'], document_class=OrderedDict)
-    dbConfig = client['dwmdev']
+    dbConfig = clientConfig['dwmdev']
 
     config = dbConfig.config.find_one({"configName": "Eloqua_Contacts_DWM"})
 
