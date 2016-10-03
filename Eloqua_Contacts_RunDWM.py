@@ -3,7 +3,7 @@ from datetime import datetime
 import sys, os, logging
 from pymongo import MongoClient
 from collections import OrderedDict
-from pyqm import Queue
+from pyqm import Queue, clean
 from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 
 ###############################################################################
