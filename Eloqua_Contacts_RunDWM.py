@@ -31,9 +31,9 @@ jobStart = datetime.now()
 
 clientQueue = MongoClient(os.environ['MONGODB_URL'])
 
-db = client['dwmqueue']
+dbQueue = clientQueue['dwmqueue']
 
-exportQueue = Queue(db = db, queueName = 'dwmQueue')
+exportQueue = Queue(db = dbQueue, queueName = 'dwmQueue')
 
 size = exportQueue.getQueueSize()
 
@@ -43,7 +43,7 @@ total = 0
 
 if size>0:
 
-    processedQueue = Queue(db = db, queueName = 'processedQueue')
+    processedQueue = Queue(db = dbQueue, queueName = 'processedQueue')
 
     job = exportQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 400)
 
