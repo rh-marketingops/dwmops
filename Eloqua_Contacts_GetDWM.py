@@ -35,9 +35,11 @@ from Eloqua_Contacts_ExportFields import fieldset
 ## Set filter
 myFilter = elq.FilterExists(name='DWM - Export Queue TEST', existsType='ContactList')
 
+syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue TEST', listType='contacts')
+
 # create bulk export
 exportDefName = jobName + str(datetime.now())
-exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName)
+exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
 logging.info("export definition created: " + exportDef['uri'])
 
 ## Create sync
