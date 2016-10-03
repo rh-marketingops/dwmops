@@ -38,9 +38,9 @@ from Eloqua_Contacts_ExportFields import fieldset
 
 clientQueue = MongoClient(os.environ['MONGODB_URL'])
 
-db = client['dwmqueue']
+dbQueue = clientQueue['dwmqueue']
 
-processedQueue = Queue(db = db, queueName = 'processedQueue')
+processedQueue = Queue(db = dbQueue, queueName = 'processedQueue')
 
 size = processedQueue.getQueueSize()
 
