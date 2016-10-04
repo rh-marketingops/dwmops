@@ -18,7 +18,7 @@ from custom import CleanZipcodeUS, CleanAnnualRevenue
 
 ## setup job name
 jobName = 'Eloqua_Contacts_DWM_RUN'
-metricPrefix = 'BATCH_HOURLY_ELOQUA_DWM_'
+metricPrefix = 'BATCH_MINUTELY_ELOQUA_DWM_'
 
 ## Setup logging
 logname = '/' + jobName + '_' + format(datetime.now(), '%Y-%m-%d') + '.log'
