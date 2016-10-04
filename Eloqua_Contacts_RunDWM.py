@@ -84,7 +84,7 @@ if size>0:
 
     ## Run DWM
     dwmStart = datetime.now()
-    dataOut = dwm.dwmAll(data=job, db=db, config=config, udfNamespace=__name__)
+    dataOut = dwm.dwmAll(data=job, db=db, config=config, udfNamespace=__name__, verbose=True)
     dwmEnd = datetime.now()
 
     client.close()
