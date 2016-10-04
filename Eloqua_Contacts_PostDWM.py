@@ -10,7 +10,7 @@ from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 ###############################################################################
 
 ## setup job name
-jobName = 'Eloqua_Contacts_DWM_GET'
+jobName = 'Eloqua_Contacts_DWM_POST'
 metricPrefix = 'BATCH_HOURLY_ELOQUA_DWM_'
 
 ## Setup logging
