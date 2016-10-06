@@ -33,7 +33,7 @@ logging.info("Eloqua session established")
 from Eloqua_Contacts_ExportFields import fieldset
 
 ## Set filter
-myFilter = elq.FilterExists(name='DWM - Export Queue TEST', existsType='ContactList')
+myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
 
 syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
 
