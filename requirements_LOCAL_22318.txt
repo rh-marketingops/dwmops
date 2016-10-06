@@ -1,0 +1,6 @@
+dwm==0.0.6
+prometheus-client==0.0.14
+-e git://github.com/colemanja91/pyeloqua.git@feature/postDataExceptions#egg=pyeloqua
+pymongo==3.3.0
+requests==2.11.1
+tqdm==4.8.4
