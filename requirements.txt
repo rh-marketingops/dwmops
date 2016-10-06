@@ -1,5 +1,4 @@
 dwm==0.0.6
-mongoqueue==0.7.3
 prometheus-client==0.0.14
 pyeloqua==0.2.8
 PyExecJS==1.4.0
