@@ -1,4 +1,4 @@
-dwm==0.0.6
+-e git://github.com/colemanja91/pyeloqua.git@feature/postDataExceptions#egg=dwm
 mongoqueue==0.7.3
 prometheus-client==0.0.14
 pyeloqua==0.2.7
