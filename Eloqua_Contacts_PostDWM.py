@@ -64,7 +64,7 @@ if size>0:
 
     # create sync action to remove from shared list on import
 
-    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Processing Queue TEST', listType='contacts')
+    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Processing Queue', listType='contacts')
 
     importDefName = 'dwmtest' + str(datetime.now())
     importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress', syncActions=[syncAction])

@@ -35,7 +35,7 @@ from Eloqua_Contacts_ExportFields import fieldset
 ## Set filter
 myFilter = elq.FilterExists(name='DWM - Export Queue TEST', existsType='ContactList')
 
-syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue TEST', listType='contacts')
+syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
 
 # create bulk export
 exportDefName = jobName + str(datetime.now())
