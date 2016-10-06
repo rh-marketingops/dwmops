@@ -1,6 +1,10 @@
 dwm==0.0.6
+mongoqueue==0.7.3
 prometheus-client==0.0.14
--e git://github.com/colemanja91/pyeloqua.git@feature/postDataExceptions#egg=pyeloqua
+pyeloqua==0.2.8
+PyExecJS==1.4.0
 pymongo==3.3.0
+pyqm==0.0.2
 requests==2.11.1
+six==1.10.0
 tqdm==4.8.4
