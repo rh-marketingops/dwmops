@@ -54,7 +54,7 @@ success = 0
 
 if size>0:
 
-    job = processedQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 80000)
+    job = processedQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 10000)
 
     jobClean = clean(job)
 
