@@ -52,39 +52,47 @@ warning = 0
 errored = 0
 success = 0
 
+
+
 if size>0:
 
     job = processedQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 10000)
 
-    jobClean = clean(job)
+    if len(job)>0:
 
-    ###############################################################################
-    ## Import data back to Eloqua
-    ###############################################################################
+        jobClean = clean(job)
 
-    # create sync action to remove from shared list on import
+        ###############################################################################
+        ## Import data back to Eloqua
+        ###############################################################################
 
-    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Processing Queue', listType='contacts')
+        # create sync action to remove from shared list on import
 
-    importDefName = 'dwmtest' + str(datetime.now())
-    importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress', syncActions=[syncAction])
-    logging.info("Import definition created: " + importDef['uri'])
-    postInData = elq.PostSyncData(data=jobClean, defObject=importDef, maxPost=20000)
-    logging.info("Data import finished: " + str(datetime.now()))
+        syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Processing Queue', listType='contacts')
 
-    ## agg stats about success of import
-    for row in postInData:
-        total += row['count']
-        if row['status']=='success':
-            success += row['count']
-        if row['status'] == 'warning':
-            warning += row['count']
-            logging.info("Sync finished with status 'warning': " + str(row['count']) + " records; " + row['uri'])
-        if row['status'] == 'errored':
-            errored += row['count']
-            logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
+        importDefName = 'dwmtest' + str(datetime.now())
+        importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress', syncActions=[syncAction])
+        logging.info("Import definition created: " + importDef['uri'])
+        postInData = elq.PostSyncData(data=jobClean, defObject=importDef, maxPost=20000)
+        logging.info("Data import finished: " + str(datetime.now()))
 
-    processedQueue.complete(job)
+        ## agg stats about success of import
+        for row in postInData:
+            total += row['count']
+            if row['status']=='success':
+                success += row['count']
+            if row['status'] == 'warning':
+                warning += row['count']
+                logging.info("Sync finished with status 'warning': " + str(row['count']) + " records; " + row['uri'])
+            if row['status'] == 'errored':
+                errored += row['count']
+                logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
+
+        processedQueue.complete(job)
+
+    else:
+
+        logging.info('no records to send... taking the day off!!!')
 
 else:
 
