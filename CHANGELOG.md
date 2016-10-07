@@ -1,3 +1,7 @@
+## 2016-10-07 v0.1.0
+- Upgrade pyeloqua v0.2.91 for misc bug fixes
+- Implement queue-based processing system (see README)
+
 ## 2016-09-29 v0.0.10
 - Upgrade to pyeloqua v0.2.7
 - Now feeding based on shared list; exports from shared list and uses sync action on import to remove from shared list

@@ -6,10 +6,25 @@ The `dwm` package is a standalone set of business logic for maintaining marketin
 
 ## Data flow
 
-The data flow of this app has three components:
+The data flow of this app uses a queue-based processing system (using the package `pyqm`):
+
+### Hourly scripts:
 1. Export the specified contacts from Eloqua via Bulk API (using Python package `pyeloqua`)
-2. If >0 contacts returned, run records through DWM
-3. Import contacts back into Eloqua
+  - Add them to the queue `dwmQueue`
+2. Pick up records that have finished processing and import back to Eloqua
+  - limit 30k to avoid data limits
+  - References queue `processedQueue`
+  - Removes from shared list on import
+
+### Minutely scripts:
+1. Run the `dwmAll` function on a set of contacts
+  - 600, currently
+  - when done, remove from `dwmQueue` and add to `processedQueue`
+2. Run a queue cleanup script
+  - Timeout records with locks older than 300 seconds
+  - Report current queue size and timeout stats to Prometheus for monitoring
+
+This system provides enough redundancy to allow for troubleshooting of a crashed script. Also helps minimize the impact on Bulk API utilization limits.
 
 ## Custom functions
 
