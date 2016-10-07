@@ -45,7 +45,7 @@ if size>0:
 
     processedQueue = Queue(db = dbQueue, queueName = 'processedQueue')
 
-    job = exportQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 400)
+    job = exportQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 600)
 
     logging.info('current job size: ' + str(len(job)))
 

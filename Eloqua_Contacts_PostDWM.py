@@ -56,7 +56,7 @@ success = 0
 
 if size>0:
 
-    job = processedQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 10000)
+    job = processedQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 30000)
 
     if len(job)>0:
 
