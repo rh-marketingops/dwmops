@@ -32,7 +32,7 @@ queueFind = dbQueue['queueList'].find()
 for queue in queueFind:
     queues.append(queue['queueName'])
 
-#logging.info("# of queues: " + str(len(queues)))
+logging.info("# of queues: " + str(len(queues)))
 
 for row in queues:
 
@@ -40,11 +40,11 @@ for row in queues:
 
     queueSize = cq.getQueueSize()
 
-    #logging.info(row + ' size: ' + str(queueSize))
+    logging.info(row + ' size: ' + str(queueSize))
 
     timeout = cq.timeout(t=300)
 
-    #logging.info(row + ' timeout: ' + str(timeout))
+    logging.info(row + ' timeout: ' + str(timeout))
 
     registry = CollectorRegistry()
     a = Gauge('QueueSize', 'Size of queue', registry=registry)
