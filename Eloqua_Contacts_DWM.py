@@ -7,7 +7,7 @@ from collections import OrderedDict
 from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 
 ###############################################################################
-## Load custom functions
+## Load custom functions 
 ###############################################################################
 
 from custom import CleanZipcodeUS, CleanAnnualRevenue
