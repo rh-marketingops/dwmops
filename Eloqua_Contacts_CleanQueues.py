@@ -50,7 +50,7 @@ for row in queues:
     a = Gauge('QueueSize', 'Size of queue', registry=registry)
     a.set(queueSize)
     b = Gauge('QueueTimeout', 'Number of records timed out', registry=registry)
-    b.set(queueSize)
+    b.set(timeout)
     push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName + '_' + row, registry=registry)
     del registry
 
