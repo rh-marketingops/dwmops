@@ -9,18 +9,22 @@ The `dwm` package is a standalone set of business logic for maintaining marketin
 The data flow of this app uses a queue-based processing system (using the package `pyqm`):
 
 ### Hourly scripts:
-1. Export the specified contacts from Eloqua via Bulk API (using Python package `pyeloqua`)
+1. *Eloqua_Contacts_GetDWM.py*
+  - Export the specified contacts from Eloqua via Bulk API (using Python package `pyeloqua`)
   - Add them to the queue `dwmQueue`
-2. Pick up records that have finished processing and import back to Eloqua
+2. *Eloqua_Contacts_PostDWM.py*
+  - Pick up records that have finished processing and import back to Eloqua
   - limit 30k to avoid data limits
   - References queue `processedQueue`
   - Removes from shared list on import
 
 ### Minutely scripts:
-1. Run the `dwmAll` function on a set of contacts
+1. *Eloqua_Contacts_RunDWM.py*
+  - Run the `dwmAll` function on a set of contacts
   - 600, currently
   - when done, remove from `dwmQueue` and add to `processedQueue`
-2. Run a queue cleanup script
+2. *Eloqua_Contacts_CleanQueues.py*
+  - Run a queue cleanup script
   - Timeout records with locks older than 300 seconds
   - Report current queue size and timeout stats to Prometheus for monitoring
 
@@ -38,6 +42,57 @@ Current implementation has two custom functions:
   - Remove any "," or "$" characters
   - Try converting to integer
     - If successful, group into pre-determined `annualRevenue` bucket
+
+## Logging
+
+### Eloqua_Contacts_CleanQueues.py
+- Logfile: `$OPENSHIFT_LOG_DIR/CLEAN_QUEUE_DWM_YYYY_MM_DD.log`
+  - Explicitly logged runtime info
+  - Accounted for exceptions
+- Logfile: `$OPENSHIFT_LOG_DIR/Eloqua_Contacts_CleanQueues_Console_YYYY_MM_DD.log`
+  - Runtime console output (including uncaught exceptions)
+- Prometheus metrics (SLI):
+  - *QueueSize*: # of records currently in each queue
+  - *QueueTimeout*: # of records "released" back into queue after timeout
+  - *last_success_unixtime*: Last time of successful run
+
+### Eloqua_Contacts_GetDWM.py
+- Logfile: `$OPENSHIFT_LOG_DIR/Eloqua_Contacts_DWM_GET_YYYY_MM_DD.log `
+  - Explicitly logged runtime info
+  - Accounted for exceptions
+- Logfile: `$OPENSHIFT_LOG_DIR/Eloqua_Contacts_GetDWM_Console_YYYY_MM_DD.log`
+  - Runtime console output (including uncaught exceptions)
+- Prometheus metrics (SLI):
+  - *last_success_unixtime*: Last time of successful run
+  - *total_seconds*: # of seconds to complete entire script
+  - *total_records_total*: # of records processed
+
+### Eloqua_Contacts_RunDWM.py
+- Logfile: `$OPENSHIFT_LOG_DIR/Eloqua_Contacts_DWM_RUN_YYYY_MM_DD.log`
+  - Explicitly logged runtime info
+  - Accounted for exceptions
+- Logfile: `$OPENSHIFT_LOG_DIR/Eloqua_Contacts_RunDWM_Console_YYYY_MM_DD.log`
+  - Runtime console output (including uncaught exceptions)
+  - If argument `verbose=True`, includes `tqdm` output 'progress bar', showing # records / second
+- Prometheus metrics (SLI):
+  - *last_success_unixtime*: Last time of successful run
+  - *total_seconds*: # of seconds to complete entire script
+  - *total_records_total*: # of records processed
+  - *total_seconds_dwm*: # of seconds to complete DWM functions (not including queue processing time)
+
+### Eloqua_Contacts_PostDWM.py
+- Logfile: `$OPENSHIFT_LOG_DIR/Eloqua_Contacts_DWM_POST_YYYY_MM_DD.log`
+  - Explicitly logged runtime info
+  - Accounted for exceptions
+- Logfile: `$OPENSHIFT_LOG_DIR/Eloqua_Contacts_PostDWM_Console_YYYY_MM_DD.log`
+  - Runtime console output (including uncaught exceptions)
+- Prometheus metrics (SLI):
+  - *last_success_unixtime*: Last time of successful run
+  - *total_seconds*: # of seconds to complete entire script
+  - *total_records_total*: # of records processed
+  - *total_records_errored*: # of records from batches which received an an error on import
+  - *total_records_warning*: # of records from batches which received a warning on import
+  - *total_records_success*: # of records which successfully imported to Eloqua
 
 # Setup
 
