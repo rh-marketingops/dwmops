@@ -6,6 +6,8 @@ The `dwm` package is a standalone set of business logic for maintaining marketin
 
 ## Data flow
 
+![alt text](/diagrams/DWMOps_SystemFlow.png "High-level flow of using the DWM")
+
 The data flow of this app uses a queue-based processing system (using the package `pyqm`):
 
 ### Hourly scripts:
