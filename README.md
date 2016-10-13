@@ -71,6 +71,4 @@ This implementation use ITOS (Red Hat IT-Hosted Openshift v2; comparable to Open
 ### Cron
 
 # TODO
-- Build out as queue-based
-  - shift monitoring away from being entirely based on pushgateway to having a pingable service running
 - Build an API operating off the same MongoDB
