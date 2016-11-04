@@ -1,8 +1,8 @@
 from pyeloqua import Eloqua
-from datetime import datetime
+from datetime import datetime, timedelta
 import sys, os, logging
 from pymongo import MongoClient
-from pyqm import Queue
+from pyqm import Queue, clean
 from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 
 ###############################################################################
@@ -10,15 +10,13 @@ from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 ###############################################################################
 
 ## setup job name
-jobName = 'Eloqua_Contacts_DWM_GET'
-metricPrefix = 'BATCH_HOURLY_ELOQUA_DWM_'
+jobName = 'Eloqua_Contacts.Indicators_Refresh'
+metricPrefix = 'BATCH_DAILY_ELOQUA_DWM_'
 
 ## Setup logging
 logname = '/' + jobName + '_' + format(datetime.now(), '%Y-%m-%d') + '.log'
 logging.basicConfig(filename=os.environ['OPENSHIFT_LOG_DIR'] + logname, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 jobStart = datetime.now()
-
-env = os.environ['OPENSHIFT_NAMESPACE']
 
 ###############################################################################
 ## Setup Eloqua session
@@ -31,24 +29,19 @@ logging.info("Eloqua session established")
 ## Export contacts from Eloqua
 ###############################################################################
 
-## import field set; store this in a separate file so we can edit them without touching this script
-from Eloqua_Contacts_ExportFields import fieldset
+fieldset = {}
+fieldset['emailAddress'] = '{{CustomObject[990].Field[18495]}}'
+fieldset['dataStatus'] = '{{CustomObject[990].Field[18496]}}'
 
 ## Set filter
-if env=='marketing':
-    myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
-elif env=='marketingdev':
-    myFilter = elq.FilterExists(name='DWM - Export Queue TEST', existsType='ContactList')
+time = datetime.strftime((datetime.now() - timedelta(days=180)), '%Y-%m-%d %H:%M:%S')
+myFilter = elq.FilterDateRange(entity='customObjects', field='Contacts.Indicators.Updated_Timestamp', start='2010-01-01 01:00:00', end=time, cdoID=990)
 
-syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
+myFilter += " AND '{{CustomObject[990].Field[18496]}}' = 'PROCESSED' "
 
 # create bulk export
 exportDefName = jobName + str(datetime.now())
-if env=='marketing':
-    exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
-elif env=='marketingdev':
-    exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName)
-
+exportDef = elq.CreateDef(defType='exports', entity='customObjects', cdoID=990, fields=fieldset, filters = myFilter, defName=exportDefName)
 
 logging.info("export definition created: " + exportDef['uri'])
 
@@ -65,27 +58,41 @@ logging.info("# of records:" + str(len(data)))
 ## Setup logging vars
 total = len(data)
 
-if len(data)>0:
+## Setup
+warning = 0
+errored = 0
+success = 0
 
-    logging.info("Add to 'dwmQueue'")
+if total>0:
 
-    client = MongoClient(os.environ['MONGODB_URL'])
+    for row in data:
 
-    db = client['dwmqueue']
+        row['dataStatus'] = 'PROCESS as MOD'
 
-    exportQueue = Queue(db = db, queueName = 'dwmQueue')
+    importDefName = jobName + str(datetime.now())
+    importDef = elq.CreateDef(defType='imports', entity='customObjects', cdoID=990, fields=fieldset, defName=importDefName, identifierFieldName='emailAddress')
+    logging.info("Import definition created: " + importDef['uri'])
 
-    exportQueue.add(data)
+    postInData = elq.PostSyncData(data=data, defObject=importDef, maxPost=20000)
+    logging.info("Data import finished: " + str(datetime.now()))
 
-    logging.info("Added to 'dwmQueue'")
+    ## agg stats about success of import
+    for row in postInData:
+        total += row['count']
+        if row['status']=='success':
+            success += row['count']
+        if row['status'] == 'warning':
+            warning += row['count']
+            logging.info("Sync finished with status 'warning': " + str(row['count']) + " records; " + row['uri'])
+        if row['status'] == 'errored':
+            errored += row['count']
+            logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
 
-else:
-
-    logging.info("Aw, theres no records here. gosh darn")
 
 jobEnd = datetime.now()
 jobTime = (jobEnd-jobStart).total_seconds()
 
+## Push monitoring stats to Prometheus
 registry = CollectorRegistry()
 g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
 g.set_to_current_time()
@@ -93,5 +100,11 @@ l = Gauge(metricPrefix + 'total_seconds', 'Total number of seconds to complete j
 l.set(jobTime)
 t = Gauge(metricPrefix + 'total_records_total', 'Total number of records processed in last batch', registry=registry)
 t.set(total)
+e = Gauge(metricPrefix + 'total_records_errored', 'Total number of records errored in last batch', registry=registry)
+e.set(errored)
+w = Gauge(metricPrefix + 'total_records_warning', 'Total number of records warned in last batch', registry=registry)
+w.set(warning)
+s = Gauge(metricPrefix + 'total_records_success', 'Total number of records successful in last batch', registry=registry)
+s.set(success)
 
 push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)

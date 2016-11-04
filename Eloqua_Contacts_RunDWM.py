@@ -43,7 +43,7 @@ total = 0
 
 if size>0:
 
-    processedQueue = Queue(db = dbQueue, queueName = 'processedQueue')
+    indicatorQueue = Queue(db = dbQueue, queueName = 'indicatorQueue')
 
     job = exportQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 600)
 
@@ -93,7 +93,7 @@ if size>0:
     ## Put them into the processedQueue; remove from exportQueue
     ###############################################################################
 
-    processedQueue.add(clean(dataOut))
+    indicatorQueue.add(clean(dataOut))
 
     exportQueue.complete(job)
 
