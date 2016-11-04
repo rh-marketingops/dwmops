@@ -68,7 +68,7 @@ if size>0:
         fieldset['dataStatus'] = '{{CustomObject[990].Field[18496]}}'
 
         importDefName = 'dwm_triggerIndicators_' + str(datetime.now())
-        importDef = elq.CreateDef(entity='customObjects', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress')
+        importDef = elq.CreateDef(entity='customObjects', defType='imports', cdoID=990, fields=fieldset, defName=importDefName, identifierFieldName='emailAddress')
         logging.info("Import definition created: " + importDef['uri'])
         postInData = elq.PostSyncData(data=emails, defObject=importDef, maxPost=20000)
         logging.info("Data import finished: " + str(datetime.now()))
