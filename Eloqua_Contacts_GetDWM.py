@@ -18,6 +18,8 @@ logname = '/' + jobName + '_' + format(datetime.now(), '%Y-%m-%d') + '.log'
 logging.basicConfig(filename=os.environ['OPENSHIFT_LOG_DIR'] + logname, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 jobStart = datetime.now()
 
+env = os.environ['OPENSHIFT_NAMESPACE']
+
 ###############################################################################
 ## Setup Eloqua session
 ###############################################################################
@@ -33,13 +35,21 @@ logging.info("Eloqua session established")
 from Eloqua_Contacts_ExportFields import fieldset
 
 ## Set filter
-myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
+if env=='marketing':
+    myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
+elif env=='marketingdev':
+    myFilter = elq.FilterExists(name='DWM - Export Queue TEST', existsType='ContactList')
 
 syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
 
 # create bulk export
 exportDefName = jobName + str(datetime.now())
-exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
+if env=='marketing':
+    exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
+elif env=='marketingdev':
+    exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName)
+
+
 logging.info("export definition created: " + exportDef['uri'])
 
 ## Create sync
