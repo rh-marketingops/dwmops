@@ -85,6 +85,10 @@ if size>0:
                 errored += row['count']
                 logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
 
+        processedQueue = Queue(db = dbQueue, queueName = 'processedQueue')
+
+        processedQueue.add(clean(job))
+
         indicatorQueue.complete(job)
 
 else:
