@@ -18,6 +18,8 @@ logname = '/' + jobName + '_' + format(datetime.now(), '%Y-%m-%d') + '.log'
 logging.basicConfig(filename=os.environ['OPENSHIFT_LOG_DIR'] + logname, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 jobStart = datetime.now()
 
+env = os.environ['OPENSHIFT_NAMESPACE']
+
 ###############################################################################
 ## Setup Eloqua session
 ###############################################################################
