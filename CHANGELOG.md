@@ -1,4 +1,4 @@
-## 2016-11-07 v0.1.1
+## 2016-11-07 v0.1.1.0
 - Additional solution documentation describing role of each script
 - Removal of script file `Eloqua_Contacts_DWM.py`; this has been replaces by multiple scripts which leverage queues (as of v0.1.0)
 - Addition to queue process: now updates associated records in CDO Contacts.Indicators, which (via data card services) triggers an update to those records
