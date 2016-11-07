@@ -17,6 +17,8 @@ logname = '/' + jobName + '_' + format(datetime.now(), '%Y-%m-%d') + '.log'
 logging.basicConfig(filename=os.environ['OPENSHIFT_LOG_DIR'] + logname, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 jobStart = datetime.now()
 
+env = os.environ['OPENSHIFT_NAMESPACE']
+
 ###############################################################################
 ## Release 'stale' locked records and get queue sizes
 ###############################################################################
@@ -46,16 +48,18 @@ for row in queues:
 
     logging.info(row + ' timeout: ' + str(timeout))
 
-    registry = CollectorRegistry()
-    a = Gauge('QueueSize', 'Size of queue', registry=registry)
-    a.set(queueSize)
-    b = Gauge('QueueTimeout', 'Number of records timed out', registry=registry)
-    b.set(timeout)
-    push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName + '_' + row, registry=registry)
-    del registry
+    if env=='marketing':
+        registry = CollectorRegistry()
+        a = Gauge('QueueSize', 'Size of queue', registry=registry)
+        a.set(queueSize)
+        b = Gauge('QueueTimeout', 'Number of records timed out', registry=registry)
+        b.set(timeout)
+        push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName + '_' + row, registry=registry)
+        del registry
 
 # Send script success to pushgateway
-registry = CollectorRegistry()
-g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
-g.set_to_current_time()
-push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)
+if env=='marketing':
+    registry = CollectorRegistry()
+    g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
+    g.set_to_current_time()
+    push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)

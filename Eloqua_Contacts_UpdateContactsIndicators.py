@@ -10,15 +10,13 @@ from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 ###############################################################################
 
 ## setup job name
-jobName = 'Eloqua_Contacts_DWM_POST'
-metricPrefix = 'BATCH_HOURLY_ELOQUA_DWM_'
+jobName = 'Eloqua_Contacts_DWM_INDICATORS'
+metricPrefix = 'BATCH_MINUTELY_ELOQUA_DWM_'
 
 ## Setup logging
 logname = '/' + jobName + '_' + format(datetime.now(), '%Y-%m-%d') + '.log'
 logging.basicConfig(filename=os.environ['OPENSHIFT_LOG_DIR'] + logname, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 jobStart = datetime.now()
-
-env = os.environ['OPENSHIFT_NAMESPACE']
 
 ###############################################################################
 ## Setup Eloqua session
@@ -28,13 +26,6 @@ elq = Eloqua(username=os.environ['ELOQUA_USER'], password=os.environ['ELOQUA_PAS
 logging.info("Eloqua session established")
 
 ###############################################################################
-## Import contacts to Eloqua
-###############################################################################
-
-## import field set; store this in a separate file so we can edit them without touching this script
-from Eloqua_Contacts_ExportFields import fieldset
-
-###############################################################################
 ## Check queue size of waiting imports
 ###############################################################################
 
@@ -42,9 +33,9 @@ clientQueue = MongoClient(os.environ['MONGODB_URL'])
 
 dbQueue = clientQueue['dwmqueue']
 
-processedQueue = Queue(db = dbQueue, queueName = 'processedQueue')
+indicatorQueue = Queue(db = dbQueue, queueName = 'indicatorQueue')
 
-size = processedQueue.getQueueSize()
+size = indicatorQueue.getQueueSize()
 
 logging.info('Records waiting in queue: ' + str(size))
 
@@ -54,28 +45,32 @@ warning = 0
 errored = 0
 success = 0
 
-
-
 if size>0:
 
-    job = processedQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 30000)
+    job = indicatorQueue.next(job = jobName + '_' + format(datetime.now(), '%Y-%m-%d'), limit = 30000)
 
     if len(job)>0:
 
-        jobClean = clean(job)
+        emails = []
 
-        ###############################################################################
-        ## Import data back to Eloqua
-        ###############################################################################
+        for row in job:
 
-        # create sync action to remove from shared list on import
+            newRow = {}
 
-        syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Processing Queue', listType='contacts')
+            newRow['emailAddress'] = row['emailAddress']
 
-        importDefName = 'dwmtest' + str(datetime.now())
-        importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress', syncActions=[syncAction])
+            newRow['dataStatus'] = 'PROCESS as MOD'
+
+            emails.append(newRow)
+
+        fieldset = {}
+        fieldset['emailAddress'] = '{{CustomObject[990].Field[18495]}}'
+        fieldset['dataStatus'] = '{{CustomObject[990].Field[18496]}}'
+
+        importDefName = 'dwm_triggerIndicators_' + str(datetime.now())
+        importDef = elq.CreateDef(entity='customObjects', defType='imports', cdoID=990, fields=fieldset, defName=importDefName, identifierFieldName='emailAddress')
         logging.info("Import definition created: " + importDef['uri'])
-        postInData = elq.PostSyncData(data=jobClean, defObject=importDef, maxPost=20000)
+        postInData = elq.PostSyncData(data=emails, defObject=importDef, maxPost=20000)
         logging.info("Data import finished: " + str(datetime.now()))
 
         ## agg stats about success of import
@@ -90,15 +85,17 @@ if size>0:
                 errored += row['count']
                 logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
 
-        processedQueue.complete(job)
+        processedQueue = Queue(db = dbQueue, queueName = 'processedQueue')
 
-    else:
+        processedQueue.add(clean(job))
 
-        logging.info('no records to send... taking the day off!!!')
+        indicatorQueue.complete(job)
 
 else:
 
     logging.info('no records to send... taking the day off!!!')
+
+
 
 jobEnd = datetime.now()
 jobTime = (jobEnd-jobStart).total_seconds()
