@@ -90,6 +90,11 @@ if size>0:
                 errored += row['count']
                 logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
 
+        # Adding this to deal with records where there is an error on import
+        if errored>0:
+            erroredQueue = Queue(db = dbQueue, queueName = 'dwmPOSTErroredQueue')
+            erroredQueue.add(clean(job))
+
         processedQueue.complete(job)
 
     else:
