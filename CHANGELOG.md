@@ -1,3 +1,6 @@
+## 2016-11-16 v0.1.2 HOTFIX
+- Add handling for POSTing back to Eloqua - if records error out on import, add to `indicatorRefreshErroredQueue` or `dwmPOSTErroredQueue`, depending on circumstance
+
 ## 2016-11-07 v0.1.1.0
 - Additional solution documentation describing role of each script
 - Removal of script file `Eloqua_Contacts_DWM.py`; this has been replaces by multiple scripts which leverage queues (as of v0.1.0)
