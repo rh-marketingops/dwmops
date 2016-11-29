@@ -37,18 +37,17 @@ from Eloqua_Contacts_ExportFields import fieldset
 ## Set filter
 if env=='marketing':
     myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
-elif env=='marketingdev':
+else:
     myFilter = elq.FilterExists(name='DWM - Export Queue TEST', existsType='ContactList')
-
-syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
 
 # create bulk export
 exportDefName = jobName + str(datetime.now())
 if env=='marketing':
-    exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
-elif env=='marketingdev':
-    exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName)
+    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
+else:
+    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue TEST', listType='contacts')
 
+exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
 
 logging.info("export definition created: " + exportDef['uri'])
 
@@ -86,13 +85,12 @@ else:
 jobEnd = datetime.now()
 jobTime = (jobEnd-jobStart).total_seconds()
 
-if env=='marketing':
-    registry = CollectorRegistry()
-    g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
-    g.set_to_current_time()
-    l = Gauge(metricPrefix + 'total_seconds', 'Total number of seconds to complete job', registry=registry)
-    l.set(jobTime)
-    t = Gauge(metricPrefix + 'total_records_total', 'Total number of records processed in last batch', registry=registry)
-    t.set(total)
+registry = CollectorRegistry()
+g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
+g.set_to_current_time()
+l = Gauge(metricPrefix + 'total_seconds', 'Total number of seconds to complete job', registry=registry)
+l.set(jobTime)
+t = Gauge(metricPrefix + 'total_records_total', 'Total number of records processed in last batch', registry=registry)
+t.set(total)
 
-    push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)
+push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)

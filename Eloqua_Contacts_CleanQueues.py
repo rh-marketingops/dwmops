@@ -48,18 +48,16 @@ for row in queues:
 
     logging.info(row + ' timeout: ' + str(timeout))
 
-    if env=='marketing':
-        registry = CollectorRegistry()
-        a = Gauge('QueueSize', 'Size of queue', registry=registry)
-        a.set(queueSize)
-        b = Gauge('QueueTimeout', 'Number of records timed out', registry=registry)
-        b.set(timeout)
-        push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName + '_' + row, registry=registry)
-        del registry
-
-# Send script success to pushgateway
-if env=='marketing':
     registry = CollectorRegistry()
-    g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
-    g.set_to_current_time()
-    push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)
+    a = Gauge('QueueSize', 'Size of queue', registry=registry)
+    a.set(queueSize)
+    b = Gauge('QueueTimeout', 'Number of records timed out', registry=registry)
+    b.set(timeout)
+    push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName + '_' + row, registry=registry)
+    del registry
+
+# Send script success to pushgateway (dev/prod env reflected in env var)
+registry = CollectorRegistry()
+g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
+g.set_to_current_time()
+push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)

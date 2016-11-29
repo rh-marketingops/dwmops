@@ -75,20 +75,24 @@ if size>0:
         importDefName = 'dwmtest' + str(datetime.now())
         importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress', syncActions=[syncAction])
         logging.info("Import definition created: " + importDef['uri'])
-        postInData = elq.PostSyncData(data=jobClean, defObject=importDef, maxPost=20000)
-        logging.info("Data import finished: " + str(datetime.now()))
+        if env=='marketing':
+            postInData = elq.PostSyncData(data=jobClean, defObject=importDef, maxPost=20000)
+            logging.info("Data import finished: " + str(datetime.now()))
 
-        ## agg stats about success of import
-        for row in postInData:
-            total += row['count']
-            if row['status']=='success':
-                success += row['count']
-            if row['status'] == 'warning':
-                warning += row['count']
-                logging.info("Sync finished with status 'warning': " + str(row['count']) + " records; " + row['uri'])
-            if row['status'] == 'errored':
-                errored += row['count']
-                logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
+            ## agg stats about success of import
+            for row in postInData:
+                total += row['count']
+                if row['status']=='success':
+                    success += row['count']
+                if row['status'] == 'warning':
+                    warning += row['count']
+                    logging.info("Sync finished with status 'warning': " + str(row['count']) + " records; " + row['uri'])
+                if row['status'] == 'errored':
+                    errored += row['count']
+                    logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
+
+        else:
+            logging.info('not PROD environment, not POSTing to Eloqua')
 
         # Adding this to deal with records where there is an error on import
         if errored>0:
@@ -109,19 +113,18 @@ jobEnd = datetime.now()
 jobTime = (jobEnd-jobStart).total_seconds()
 
 ## Push monitoring stats to Prometheus
-if env=='marketing':
-    registry = CollectorRegistry()
-    g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
-    g.set_to_current_time()
-    l = Gauge(metricPrefix + 'total_seconds', 'Total number of seconds to complete job', registry=registry)
-    l.set(jobTime)
-    t = Gauge(metricPrefix + 'total_records_total', 'Total number of records processed in last batch', registry=registry)
-    t.set(total)
-    e = Gauge(metricPrefix + 'total_records_errored', 'Total number of records errored in last batch', registry=registry)
-    e.set(errored)
-    w = Gauge(metricPrefix + 'total_records_warning', 'Total number of records warned in last batch', registry=registry)
-    w.set(warning)
-    s = Gauge(metricPrefix + 'total_records_success', 'Total number of records successful in last batch', registry=registry)
-    s.set(success)
+registry = CollectorRegistry()
+g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
+g.set_to_current_time()
+l = Gauge(metricPrefix + 'total_seconds', 'Total number of seconds to complete job', registry=registry)
+l.set(jobTime)
+t = Gauge(metricPrefix + 'total_records_total', 'Total number of records processed in last batch', registry=registry)
+t.set(total)
+e = Gauge(metricPrefix + 'total_records_errored', 'Total number of records errored in last batch', registry=registry)
+e.set(errored)
+w = Gauge(metricPrefix + 'total_records_warning', 'Total number of records warned in last batch', registry=registry)
+w.set(warning)
+s = Gauge(metricPrefix + 'total_records_success', 'Total number of records successful in last batch', registry=registry)
+s.set(success)
 
-    push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)
+push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)

@@ -111,15 +111,14 @@ except:
     dwmTime = 0
 
 ## Push monitoring stats to Prometheus
-if env=='marketing':
-    registry = CollectorRegistry()
-    g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
-    g.set_to_current_time()
-    l = Gauge(metricPrefix + 'total_seconds', 'Total number of seconds to complete job', registry=registry)
-    l.set(jobTime)
-    t = Gauge(metricPrefix + 'total_records_total', 'Total number of records processed in last batch', registry=registry)
-    t.set(total)
-    z = Gauge(metricPrefix + 'total_seconds_dwm', 'Total number of seconds to complete DWM processing', registry=registry)
-    z.set(dwmTime)
+registry = CollectorRegistry()
+g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
+g.set_to_current_time()
+l = Gauge(metricPrefix + 'total_seconds', 'Total number of seconds to complete job', registry=registry)
+l.set(jobTime)
+t = Gauge(metricPrefix + 'total_records_total', 'Total number of records processed in last batch', registry=registry)
+t.set(total)
+z = Gauge(metricPrefix + 'total_seconds_dwm', 'Total number of seconds to complete DWM processing', registry=registry)
+z.set(dwmTime)
 
-    push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)
+push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)
