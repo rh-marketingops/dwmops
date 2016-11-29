@@ -40,14 +40,14 @@ if env=='marketing':
 else:
     myFilter = elq.FilterExists(name='DWM - Export Queue TEST', existsType='ContactList')
 
-syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
-
 # create bulk export
 exportDefName = jobName + str(datetime.now())
 if env=='marketing':
-    exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
-elif:
-    exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName)
+    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
+else:
+    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue TEST', listType='contacts')
+
+exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
 
 logging.info("export definition created: " + exportDef['uri'])
 
