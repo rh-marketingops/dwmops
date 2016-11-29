@@ -72,24 +72,24 @@ if size>0:
         importDefName = 'dwm_triggerIndicators_' + str(datetime.now())
         importDef = elq.CreateDef(entity='customObjects', defType='imports', cdoID=990, fields=fieldset, defName=importDefName, identifierFieldName='emailAddress')
         logging.info("Import definition created: " + importDef['uri'])
-        
+
         if env=='marketing':
             postInData = elq.PostSyncData(data=emails, defObject=importDef, maxPost=20000)
             logging.info("Data import finished: " + str(datetime.now()))
+
+            ## agg stats about success of import
+            for row in postInData:
+                total += row['count']
+                if row['status']=='success':
+                    success += row['count']
+                if row['status'] == 'warning':
+                    warning += row['count']
+                    logging.info("Sync finished with status 'warning': " + str(row['count']) + " records; " + row['uri'])
+                if row['status'] == 'errored':
+                    errored += row['count']
+                    logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
         else:
             logging.info('not PROD environment, not POSTing to Eloqua')
-
-        ## agg stats about success of import
-        for row in postInData:
-            total += row['count']
-            if row['status']=='success':
-                success += row['count']
-            if row['status'] == 'warning':
-                warning += row['count']
-                logging.info("Sync finished with status 'warning': " + str(row['count']) + " records; " + row['uri'])
-            if row['status'] == 'errored':
-                errored += row['count']
-                logging.info("Sync finished with status 'errored': " + str(row['count']) + " records; " + row['uri'])
 
         processedQueue = Queue(db = dbQueue, queueName = 'processedQueue')
 
