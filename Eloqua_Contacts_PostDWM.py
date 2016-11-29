@@ -73,9 +73,9 @@ if size>0:
         syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Processing Queue', listType='contacts')
 
         importDefName = 'dwmtest' + str(datetime.now())
+        importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress', syncActions=[syncAction])
+        logging.info("Import definition created: " + importDef['uri'])
         if env=='marketing':
-            importDef = elq.CreateDef(entity='contacts', defType='imports', fields=fieldset, defName=importDefName, identifierFieldName='emailAddress', syncActions=[syncAction])
-            logging.info("Import definition created: " + importDef['uri'])
             postInData = elq.PostSyncData(data=jobClean, defObject=importDef, maxPost=20000)
             logging.info("Data import finished: " + str(datetime.now()))
         else:
