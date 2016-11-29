@@ -74,9 +74,11 @@ if total>0:
     importDefName = jobName + str(datetime.now())
     importDef = elq.CreateDef(defType='imports', entity='customObjects', cdoID=990, fields=fieldset, defName=importDefName, identifierFieldName='emailAddress')
     logging.info("Import definition created: " + importDef['uri'])
-
-    postInData = elq.PostSyncData(data=data, defObject=importDef, maxPost=20000)
-    logging.info("Data import finished: " + str(datetime.now()))
+    if env=='marketing':
+        postInData = elq.PostSyncData(data=data, defObject=importDef, maxPost=20000)
+        logging.info("Data import finished: " + str(datetime.now()))
+    else:
+        logging.info('not PROD environment, not POSTing to Eloqua')
 
     ## agg stats about success of import
     for row in postInData:
