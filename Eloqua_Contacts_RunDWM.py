@@ -95,7 +95,7 @@ if size>0:
     ## Put them into the processedQueue; remove from exportQueue
     ###############################################################################
 
-    indicatorQueue.add(clean(dataOut))
+    indicatorQueue.add(dataOut, transfer=True)
 
     exportQueue.complete(job)
 
