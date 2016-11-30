@@ -2,8 +2,8 @@ dwm==0.0.6
 prometheus-client==0.0.14
 pyeloqua==0.2.91
 PyExecJS==1.4.0
-pymongo==3.3.0
-pyqm==0.0.2
+pymongo==3.4.0
+pyqm==0.0.5
 requests==2.11.1
 six==1.10.0
 tqdm==4.8.4
