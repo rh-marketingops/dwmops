@@ -5,7 +5,7 @@ x=$(($(date +%M) % 30 ))
 # Run clean queues script
 
 echo "running cleanqueues.sh"
-bash $OPENSHIFT_REPO_DIR/runscripts/cleanqueues.sh
+bash $OPENSHIFT_REPO_DIR/runscripts/minute_cleanqueues.sh
 
 # create conditional vars
 
@@ -23,22 +23,22 @@ if [ "${#DAILY_REFRESH}" -eq 0 ]; then
   # If is beginning of half hour, run GetDWM
   if [ $x -eq 0 ]; then
     echo "running getdwm.sh"
-    bash $OPENSHIFT_REPO_DIR/runscripts/getdwm.sh
+    bash $OPENSHIFT_REPO_DIR/runscripts/halfhour_getdwm.sh
   # If is middle of half hour (XX:15, XX:45), run POSTDWM
   else if [ $x -eq 15 ]; then
     echo "running postdwm.sh"
-    bash $OPENSHIFT_REPO_DIR/runscripts/postdwm.sh
+    bash $OPENSHIFT_REPO_DIR/runscripts/halfhour_postdwm.sh
   # Else check conditionals to run other scripts
   else
     ## if GET or POST not running then proceed, else exit
     if [ "${#DWM_GET}" -eq 0 ] && [ "${#DWM_POST}" -eq 0 ]; then
       echo "running rundwm.sh"
-      bash $OPENSHIFT_REPO_DIR/runscripts/rundwm.sh
+      bash $OPENSHIFT_REPO_DIR/runscripts/minute_rundwm.sh
 
       # If dwm indicator refresh not running then proceed, else exit
       if [ "${#DWM_INDICATORS}" -eq 0 ]; then
         echo "running rundwmindicators.sh"
-        bash $OPENSHIFT_REPO_DIR/runscripts/rundwmindicators.sh
+        bash $OPENSHIFT_REPO_DIR/runscripts/minute_rundwmindicators.sh
       else
         echo "DWM Indicator Refresh still running..."
       fi
