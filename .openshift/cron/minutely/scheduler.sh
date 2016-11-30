@@ -5,40 +5,38 @@ x=$(($(date +%M) % 30 ))
 # Run clean queues script
 
 echo "running cleanqueues.sh"
-bash $OPENSHIFT_REPO_DIR/runscripts/minute_cleanqueues.sh
+#bash $OPENSHIFT_REPO_DIR/runscripts/minute_cleanqueues.sh
 
 # create conditional vars
 
-DAILY_REFRESH=`ps ax | sed -n /Eloqua_Contacts.Indicators_Refresh.py/p | grep -v sed | grep -v ${CHECK}`
-DWM_GET=`ps ax | sed -n /Eloqua_Contacts_GetDWM.py/p | grep -v sed | grep -v ${CHECK}`
-DWM_POST=`ps ax | sed -n /Eloqua_Contacts_GetPOST.py/p | grep -v sed | grep -v ${CHECK}`
-DWM_INDICATORS=`ps ax | sed -n /Eloqua_Contacts_UpdateContactsIndicators.py/p | grep -v sed | grep -v ${CHECK}`
+DAILY_REFRESH=$(ps ax | sed -n /Eloqua_Contacts.Indicators_Refresh.py/p | grep -v sed | grep -v "${CHECK}")
+DWM_GET=$(ps ax | sed -n /Eloqua_Contacts_GetDWM.py/p | grep -v sed | grep -v "${CHECK}")
+DWM_POST=$(ps ax | sed -n /Eloqua_Contacts_GetPOST.py/p | grep -v sed | grep -v "${CHECK}")
+DWM_INDICATORS=$(ps ax | sed -n /Eloqua_Contacts_UpdateContactsIndicators.py/p | grep -v sed | grep -v "${CHECK}")
 
 # Begin conditionals
 
 # If daily refresh script is not running then proceed, else EXIT
 
 if [ "${#DAILY_REFRESH}" -eq 0 ]; then
-
   # If is beginning of half hour, run GetDWM
   if [ $x -eq 0 ]; then
     echo "running getdwm.sh"
-    bash $OPENSHIFT_REPO_DIR/runscripts/halfhour_getdwm.sh
-  # If is middle of half hour (XX:15, XX:45), run POSTDWM
-  else if [ $x -eq 15 ]; then
+    #bash $OPENSHIFT_REPO_DIR/runscripts/halfhour_getdwm.sh
+  elif [ $x -eq 15 ]; then
+    # If is middle of half hour (XX:15, XX:45), run POSTDWM
     echo "running postdwm.sh"
-    bash $OPENSHIFT_REPO_DIR/runscripts/halfhour_postdwm.sh
-  # Else check conditionals to run other scripts
+    #bash $OPENSHIFT_REPO_DIR/runscripts/halfhour_postdwm.sh
   else
-    ## if GET or POST not running then proceed, else exit
+    # Else check conditionals to run other scripts
     if [ "${#DWM_GET}" -eq 0 ] && [ "${#DWM_POST}" -eq 0 ]; then
+      ## if GET or POST not running then proceed, else exit
       echo "running rundwm.sh"
-      bash $OPENSHIFT_REPO_DIR/runscripts/minute_rundwm.sh
-
-      # If dwm indicator refresh not running then proceed, else exit
+      #bash $OPENSHIFT_REPO_DIR/runscripts/minute_rundwm.sh
       if [ "${#DWM_INDICATORS}" -eq 0 ]; then
+        # If dwm indicator refresh not running then proceed, else exit
         echo "running rundwmindicators.sh"
-        bash $OPENSHIFT_REPO_DIR/runscripts/minute_rundwmindicators.sh
+        #bash $OPENSHIFT_REPO_DIR/runscripts/minute_rundwmindicators.sh
       else
         echo "DWM Indicator Refresh still running..."
       fi
@@ -46,7 +44,6 @@ if [ "${#DAILY_REFRESH}" -eq 0 ]; then
       echo "GET or POST still running..."
     fi
   fi
-
+else
+  echo "daily refresh scripts still running..."
 fi
-
-# Push last run unixtime to Prometheus
