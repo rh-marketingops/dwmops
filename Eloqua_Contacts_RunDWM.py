@@ -37,7 +37,7 @@ dbQueue = clientQueue['dwmqueue']
 
 exportQueue = Queue(db = dbQueue, queueName = 'dwmQueue')
 
-size = exportQueue.getQueueSize()
+size = exportQueue.getAvailSize()
 
 logging.info('Records waiting in queue: ' + str(size))
 
