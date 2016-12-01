@@ -62,7 +62,7 @@ if size>0:
 
     if len(job)>0:
 
-        jobClean = clean(job)
+        jobClean = clean(job, removeBatch=True)
 
         ###############################################################################
         ## Import data back to Eloqua
