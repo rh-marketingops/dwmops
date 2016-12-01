@@ -51,9 +51,9 @@ for row in queues:
     logging.info(row + ' timeout: ' + str(timeout))
 
     registry = CollectorRegistry()
-    a = Gauge('QueueSize', 'Size of queue', registry=registry)
+    a = Gauge('QueueSize_DWM', 'Size of queue', registry=registry)
     a.set(queueSize)
-    b = Gauge('QueueTimeout', 'Number of records timed out', registry=registry)
+    b = Gauge('QueueTimeout_DWM', 'Number of records timed out', registry=registry)
     b.set(timeout)
     #c = Gauge('QueueMaxCounter', 'Current maximum # of attempts', registry=registry)
     #c.set(queueStats['_counter']['max'])
