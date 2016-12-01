@@ -1,6 +1,7 @@
 #!/bin/bash
 CHECK=$0
-x=$(($(date +%M) % 30 ))
+minute=$(date +%M)
+x=$((10#$minute % 30 ))
 
 # Run clean queues script
 
