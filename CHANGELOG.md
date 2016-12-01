@@ -1,4 +1,5 @@
-## 2016-12-06 v0.3.0
+## 2016-12-06 v0.2.0
+- Added handling to account for dev/prod environments (don't want to post back data processed through DEV to PROD)
 - Upgraded `pyqm=v0.0.6`
   + Implemented batch tracking on records coming through `Eloqua_Contacts_GetDWM.py`
   + Additional queue stats now served up to Prometheus Pushgateway (age of oldest in queue, max attempts)
@@ -10,9 +11,6 @@
   + None of these run if the daily script, `Eloqua_Contacts.Indicators_Refresh.py`, is still running
 - Upgraded `pyeloqua==v0.3.2`
   + Because.
-
-## 2016-11-06 v0.2.0
-- Added handling to account for dev/prod environments (don't want to post back data processed through DEV to PROD)
 
 ## 2016-11-16 v0.1.2 HOTFIX
 - Add handling for POSTing back to Eloqua - if records error out on import, add to `indicatorRefreshErroredQueue` or `dwmPOSTErroredQueue`, depending on circumstance
