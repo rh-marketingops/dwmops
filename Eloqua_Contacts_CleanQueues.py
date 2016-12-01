@@ -44,6 +44,8 @@ for row in queues:
 
     logging.info(row + ' size: ' + str(queueSize))
 
+    queueStats = cq.getQueueStats()
+
     timeout = cq.timeout(t=300)
 
     logging.info(row + ' timeout: ' + str(timeout))
@@ -53,6 +55,10 @@ for row in queues:
     a.set(queueSize)
     b = Gauge('QueueTimeout', 'Number of records timed out', registry=registry)
     b.set(timeout)
+    c = Gauge('QueueMaxCounter', 'Current maximum # of attempts', registry=registry)
+    c.set(queueStats['_counter']['max'])
+    d = Gauge('QueueMaxTimestamp', 'Age of oldest in queue', registry=registry)
+    d.set(queueStats['_timestamp']['max'])
     push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName + '_' + row, registry=registry)
     del registry
 
