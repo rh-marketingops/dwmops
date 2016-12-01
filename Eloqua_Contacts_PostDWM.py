@@ -99,7 +99,7 @@ if size>0:
             erroredQueue = Queue(db = dbQueue, queueName = 'dwmPOSTErroredQueue')
             erroredQueue.add(job, transfer=True)
 
-        processedQueue.complete(job)
+        processedQueue.complete(job, completeBatch=True)
 
     else:
 
