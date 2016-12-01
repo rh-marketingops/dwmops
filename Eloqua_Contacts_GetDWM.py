@@ -74,7 +74,7 @@ if len(data)>0:
 
     exportQueue = Queue(db = db, queueName = 'dwmQueue')
 
-    exportQueue.add(data)
+    exportQueue.add(data, batchName=jobName + ' ' + format(datetime.now(), '%Y-%m-%d %H:%M:%S'))
 
     logging.info("Added to 'dwmQueue'")
 

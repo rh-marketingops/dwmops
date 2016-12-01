@@ -37,7 +37,7 @@ dbQueue = clientQueue['dwmqueue']
 
 exportQueue = Queue(db = dbQueue, queueName = 'dwmQueue')
 
-size = exportQueue.getQueueSize()
+size = exportQueue.getAvailSize()
 
 logging.info('Records waiting in queue: ' + str(size))
 
@@ -95,7 +95,7 @@ if size>0:
     ## Put them into the processedQueue; remove from exportQueue
     ###############################################################################
 
-    indicatorQueue.add(clean(dataOut))
+    indicatorQueue.add(dataOut, transfer=True)
 
     exportQueue.complete(job)
 

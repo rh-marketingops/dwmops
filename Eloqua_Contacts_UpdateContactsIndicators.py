@@ -95,9 +95,9 @@ if size>0:
 
         if errored>0:
             erroredQueue = Queue(db = dbQueue, queueName = 'indicatorRefreshErroredQueue')
-            erroredQueue.add(clean(job))
+            erroredQueue.add(job, transfer=True)
         else:
-            processedQueue.add(clean(job))
+            processedQueue.add(job, transfer=True)
 
         indicatorQueue.complete(job)
 
