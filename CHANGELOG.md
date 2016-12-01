@@ -8,6 +8,8 @@
   + `Eloqua_Contacts_GetDWM.py` and `Eloqua_Contacts_PostDWM.py` now run on HH:00/HH:30 and HH:15/HH:45, respectively
   + `Eloqua_Contacts_RunDWM.py` and `Eloqua_Contacts_UpdateContactsIndicators.py` run all other minutes, unless a previous instance is still running
   + None of these run if the daily script, `Eloqua_Contacts.Indicators_Refresh.py`, is still running
+- Upgraded `pyeloqua==v0.3.2`
+  + Because.
 
 ## 2016-11-06 v0.2.0
 - Added handling to account for dev/prod environments (don't want to post back data processed through DEV to PROD)
