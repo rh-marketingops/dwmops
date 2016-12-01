@@ -1,3 +1,14 @@
+## 2016-12-06 v0.3.0
+- Upgraded `pyqm=v0.0.6`
+  + Implemented batch tracking on records coming through `Eloqua_Contacts_GetDWM.py`
+  + Additional queue stats now served up to Prometheus Pushgateway (age of oldest in queue, max attempts)
+  + Use `transfer=True` to ensure uniqueness is preserved across queues, hopefully to avoid duplicates being imported to Eloqua
+    - This has been a potential problem because duplicates are completely dropped from any import
+- Staggered jobs:
+  + `Eloqua_Contacts_GetDWM.py` and `Eloqua_Contacts_PostDWM.py` now run on HH:00/HH:30 and HH:15/HH:45, respectively
+  + `Eloqua_Contacts_RunDWM.py` and `Eloqua_Contacts_UpdateContactsIndicators.py` run all other minutes, unless a previous instance is still running
+  + None of these run if the daily script, `Eloqua_Contacts.Indicators_Refresh.py`, is still running
+
 ## 2016-11-06 v0.2.0
 - Added handling to account for dev/prod environments (don't want to post back data processed through DEV to PROD)
 
