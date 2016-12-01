@@ -97,7 +97,7 @@ if size>0:
         # Adding this to deal with records where there is an error on import
         if errored>0:
             erroredQueue = Queue(db = dbQueue, queueName = 'dwmPOSTErroredQueue')
-            erroredQueue.add(clean(job))
+            erroredQueue.add(job, transfer=True)
 
         processedQueue.complete(job)
 
