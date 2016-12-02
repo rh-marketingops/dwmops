@@ -12,6 +12,7 @@
 - Upgraded `pyeloqua==v0.3.2`
   + Because.
 - Added pre-export validation to check shared list `DWM - Export Queue` _before_ creating a sync; this saves on our daily sync limit, especially since now trying to export twice an hour.
+- Added hourly script `keepalive.sh`; since ITOS/Openshift Enterprise is _technically_ for web apps, if there's no web traffic to the designated URL after a certain period of time the application will idle, shutting down cron jobs and databases. This script pings the app's DNS once an hour to make it think there's traffic, and hence keep the app alive. 
 
 ## 2016-11-16 v0.1.2 HOTFIX
 - Add handling for POSTing back to Eloqua - if records error out on import, add to `indicatorRefreshErroredQueue` or `dwmPOSTErroredQueue`, depending on circumstance
