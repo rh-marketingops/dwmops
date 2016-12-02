@@ -28,59 +28,74 @@ elq = Eloqua(username=os.environ['ELOQUA_USER'], password=os.environ['ELOQUA_PAS
 logging.info("Eloqua session established")
 
 ###############################################################################
-## Export contacts from Eloqua
+## Check list size before attempting export sync
+## Do this to save syncs
 ###############################################################################
 
-## import field set; store this in a separate file so we can edit them without touching this script
-from Eloqua_Contacts_ExportFields import fieldset
+listSize = elq.GetAssetSize(assetType='sharedList', name='DWM - Export Queue')
 
-## Set filter
-if env=='marketing':
-    myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
+total = listSize
+
+if listSize>0:
+
+    ###############################################################################
+    ## Export contacts from Eloqua
+    ###############################################################################
+
+    ## import field set; store this in a separate file so we can edit them without touching this script
+    from Eloqua_Contacts_ExportFields import fieldset
+
+    ## Set filter
+    if env=='marketing':
+        myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
+    else:
+        myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
+
+    # create bulk export
+    exportDefName = jobName + str(datetime.now())
+    if env=='marketing':
+        syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
+    else:
+        syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue TEST', listType='contacts')
+
+    exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
+
+    logging.info("export definition created: " + exportDef['uri'])
+
+    ## Create sync
+    exportSync = elq.CreateSync(defObject=exportDef)
+    logging.info("export sync started: " + exportSync['uri'])
+    status = elq.CheckSyncStatus(syncObject=exportSync)
+    logging.info("sync successful; retreiving data")
+
+    ## Retrieve data
+    data = elq.GetSyncedData(defObject=exportDef, retrieveLimit=80000)
+    logging.info("# of records:" + str(len(data)))
+
+    ## Setup logging vars
+    total = len(data)
+
+    if len(data)>0:
+
+        logging.info("Add to 'dwmQueue'")
+
+        client = MongoClient(os.environ['MONGODB_URL'])
+
+        db = client['dwmqueue']
+
+        exportQueue = Queue(db = db, queueName = 'dwmQueue')
+
+        exportQueue.add(data, batchName=jobName + ' ' + format(datetime.now(), '%Y-%m-%d %H:%M:%S'))
+
+        logging.info("Added to 'dwmQueue'")
+
+    else:
+
+        logging.info("Aw, theres no records here. gosh darn")
+
 else:
-    myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
 
-# create bulk export
-exportDefName = jobName + str(datetime.now())
-if env=='marketing':
-    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
-else:
-    syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue TEST', listType='contacts')
-
-exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
-
-logging.info("export definition created: " + exportDef['uri'])
-
-## Create sync
-exportSync = elq.CreateSync(defObject=exportDef)
-logging.info("export sync started: " + exportSync['uri'])
-status = elq.CheckSyncStatus(syncObject=exportSync)
-logging.info("sync successful; retreiving data")
-
-## Retrieve data
-data = elq.GetSyncedData(defObject=exportDef, retrieveLimit=80000)
-logging.info("# of records:" + str(len(data)))
-
-## Setup logging vars
-total = len(data)
-
-if len(data)>0:
-
-    logging.info("Add to 'dwmQueue'")
-
-    client = MongoClient(os.environ['MONGODB_URL'])
-
-    db = client['dwmqueue']
-
-    exportQueue = Queue(db = db, queueName = 'dwmQueue')
-
-    exportQueue.add(data, batchName=jobName + ' ' + format(datetime.now(), '%Y-%m-%d %H:%M:%S'))
-
-    logging.info("Added to 'dwmQueue'")
-
-else:
-
-    logging.info("Aw, theres no records here. gosh darn")
+    logging.info('skipping sync, no contacts in list')
 
 jobEnd = datetime.now()
 jobTime = (jobEnd-jobStart).total_seconds()
