@@ -55,9 +55,9 @@ for row in queues:
     a.set(queueSize)
     b = Gauge('QueueTimeout_DWM', 'Number of records timed out', registry=registry)
     b.set(timeout)
-    c = Gauge('QueueMaxCounter', 'Current maximum # of attempts', registry=registry)
+    c = Gauge('QueueMaxCounter_DWM', 'Current maximum # of attempts', registry=registry)
     c.set(queueStats['_counter']['max'])
-    d = Gauge('QueueMaxTimestamp', 'Age of oldest in queue', registry=registry)
+    d = Gauge('QueueMaxTimestamp_DWM', 'Age of oldest in queue', registry=registry)
     d.set(queueStats['_timestamp']['max'])
     push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName + '_' + row, registry=registry)
     del registry
