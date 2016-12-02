@@ -38,7 +38,7 @@ from Eloqua_Contacts_ExportFields import fieldset
 if env=='marketing':
     myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
 else:
-    myFilter = elq.FilterExists(name='DWM - Export Queue TEST', existsType='ContactList')
+    myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
 
 # create bulk export
 exportDefName = jobName + str(datetime.now())
