@@ -11,6 +11,7 @@
   + None of these run if the daily script, `Eloqua_Contacts.Indicators_Refresh.py`, is still running
 - Upgraded `pyeloqua==v0.3.2`
   + Because.
+- Added pre-export validation to check shared list `DWM - Export Queue` _before_ creating a sync; this saves on our daily sync limit, especially since now trying to export twice an hour.
 
 ## 2016-11-16 v0.1.2 HOTFIX
 - Add handling for POSTing back to Eloqua - if records error out on import, add to `indicatorRefreshErroredQueue` or `dwmPOSTErroredQueue`, depending on circumstance
