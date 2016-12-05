@@ -38,6 +38,7 @@ if [ "${#DAILY_REFRESH}" -eq 0 ]; then
         bash $OPENSHIFT_REPO_DIR/runscripts/minute_rundwm.sh
       else
         echo "DWM Run script still running..."
+      fi
       if [ "${#DWM_INDICATORS}" -eq 0 ]; then
         # If dwm indicator refresh not running then proceed, else exit
         echo "running rundwmindicators.sh"
