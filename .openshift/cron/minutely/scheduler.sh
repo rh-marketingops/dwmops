@@ -14,6 +14,7 @@ DAILY_REFRESH=$(ps ax | sed -n /Eloqua_Contacts.Indicators_Refresh.py/p | grep -
 DWM_GET=$(ps ax | sed -n /Eloqua_Contacts_GetDWM.py/p | grep -v sed | grep -v "${CHECK}")
 DWM_POST=$(ps ax | sed -n /Eloqua_Contacts_GetPOST.py/p | grep -v sed | grep -v "${CHECK}")
 DWM_INDICATORS=$(ps ax | sed -n /Eloqua_Contacts_UpdateContactsIndicators.py/p | grep -v sed | grep -v "${CHECK}")
+DWM_RUN=$(ps ax | sed -n /Eloqua_Contacts_RunDWM.py/p | grep -v sed | grep -v "${CHECK}")
 
 # Begin conditionals
 
@@ -32,8 +33,11 @@ if [ "${#DAILY_REFRESH}" -eq 0 ]; then
     # Else check conditionals to run other scripts
     if [ "${#DWM_GET}" -eq 0 ] && [ "${#DWM_POST}" -eq 0 ]; then
       ## if GET or POST not running then proceed, else exit
-      echo "running rundwm.sh"
-      bash $OPENSHIFT_REPO_DIR/runscripts/minute_rundwm.sh
+      if [ "${#DWM_RUN}" -eq 0 ]; then
+        echo "running rundwm.sh"
+        bash $OPENSHIFT_REPO_DIR/runscripts/minute_rundwm.sh
+      else
+        echo "DWM Run script still running..."
       if [ "${#DWM_INDICATORS}" -eq 0 ]; then
         # If dwm indicator refresh not running then proceed, else exit
         echo "running rundwmindicators.sh"
