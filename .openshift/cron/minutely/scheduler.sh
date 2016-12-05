@@ -12,7 +12,7 @@ bash $OPENSHIFT_REPO_DIR/runscripts/minute_cleanqueues.sh
 
 DAILY_REFRESH=$(ps ax | sed -n /Eloqua_Contacts.Indicators_Refresh.py/p | grep -v sed | grep -v "${CHECK}")
 DWM_GET=$(ps ax | sed -n /Eloqua_Contacts_GetDWM.py/p | grep -v sed | grep -v "${CHECK}")
-DWM_POST=$(ps ax | sed -n /Eloqua_Contacts_GetPOST.py/p | grep -v sed | grep -v "${CHECK}")
+DWM_POST=$(ps ax | sed -n /Eloqua_Contacts_PostDWM.py/p | grep -v sed | grep -v "${CHECK}")
 DWM_INDICATORS=$(ps ax | sed -n /Eloqua_Contacts_UpdateContactsIndicators.py/p | grep -v sed | grep -v "${CHECK}")
 DWM_RUN=$(ps ax | sed -n /Eloqua_Contacts_RunDWM.py/p | grep -v sed | grep -v "${CHECK}")
 
