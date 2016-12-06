@@ -28,71 +28,84 @@ elq = Eloqua(username=os.environ['ELOQUA_USER'], password=os.environ['ELOQUA_PAS
 logging.info("Eloqua session established")
 
 ###############################################################################
-## Export contacts from Eloqua
+## Check list size before attempting export sync
+## Do this to save syncs
 ###############################################################################
 
-## import field set; store this in a separate file so we can edit them without touching this script
-from Eloqua_Contacts_ExportFields import fieldset
+listSize = elq.GetAssetSize(assetType='sharedList', name='DWM - Export Queue')
 
-## Set filter
-if env=='marketing':
-    myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
-elif env=='marketingdev':
-    myFilter = elq.FilterExists(name='DWM - Export Queue TEST', existsType='ContactList')
+total = listSize
 
-syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
+if listSize>0:
 
-# create bulk export
-exportDefName = jobName + str(datetime.now())
-if env=='marketing':
+    ###############################################################################
+    ## Export contacts from Eloqua
+    ###############################################################################
+
+    ## import field set; store this in a separate file so we can edit them without touching this script
+    from Eloqua_Contacts_ExportFields import fieldset
+
+    ## Set filter
+    if env=='marketing':
+        myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
+    else:
+        myFilter = elq.FilterExists(name='DWM - Export Queue', existsType='ContactList')
+
+    # create bulk export
+    exportDefName = jobName + str(datetime.now())
+    if env=='marketing':
+        syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue', listType='contacts')
+    else:
+        syncAction = elq.CreateSyncAction(action='remove', listName='DWM - Export Queue TEST', listType='contacts')
+
     exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName, syncActions=[syncAction])
-elif env=='marketingdev':
-    exportDef = elq.CreateDef(defType='exports', entity='contacts', fields=fieldset, filters = myFilter, defName=exportDefName)
 
+    logging.info("export definition created: " + exportDef['uri'])
 
-logging.info("export definition created: " + exportDef['uri'])
+    ## Create sync
+    exportSync = elq.CreateSync(defObject=exportDef)
+    logging.info("export sync started: " + exportSync['uri'])
+    status = elq.CheckSyncStatus(syncObject=exportSync)
+    logging.info("sync successful; retreiving data")
 
-## Create sync
-exportSync = elq.CreateSync(defObject=exportDef)
-logging.info("export sync started: " + exportSync['uri'])
-status = elq.CheckSyncStatus(syncObject=exportSync)
-logging.info("sync successful; retreiving data")
+    ## Retrieve data
+    data = elq.GetSyncedData(defObject=exportDef, retrieveLimit=80000)
+    logging.info("# of records:" + str(len(data)))
 
-## Retrieve data
-data = elq.GetSyncedData(defObject=exportDef, retrieveLimit=80000)
-logging.info("# of records:" + str(len(data)))
+    ## Setup logging vars
+    total = len(data)
 
-## Setup logging vars
-total = len(data)
+    if len(data)>0:
 
-if len(data)>0:
+        logging.info("Add to 'dwmQueue'")
 
-    logging.info("Add to 'dwmQueue'")
+        client = MongoClient(os.environ['MONGODB_URL'])
 
-    client = MongoClient(os.environ['MONGODB_URL'])
+        db = client['dwmqueue']
 
-    db = client['dwmqueue']
+        exportQueue = Queue(db = db, queueName = 'dwmQueue')
 
-    exportQueue = Queue(db = db, queueName = 'dwmQueue')
+        exportQueue.add(data, batchName=jobName + ' ' + format(datetime.now(), '%Y-%m-%d %H:%M:%S'))
 
-    exportQueue.add(data)
+        logging.info("Added to 'dwmQueue'")
 
-    logging.info("Added to 'dwmQueue'")
+    else:
+
+        logging.info("Aw, theres no records here. gosh darn")
 
 else:
 
-    logging.info("Aw, theres no records here. gosh darn")
+    logging.info('skipping sync, no contacts in list')
 
 jobEnd = datetime.now()
 jobTime = (jobEnd-jobStart).total_seconds()
 
-if env=='marketing':
-    registry = CollectorRegistry()
-    g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
-    g.set_to_current_time()
-    l = Gauge(metricPrefix + 'total_seconds', 'Total number of seconds to complete job', registry=registry)
-    l.set(jobTime)
-    t = Gauge(metricPrefix + 'total_records_total', 'Total number of records processed in last batch', registry=registry)
-    t.set(total)
+registry = CollectorRegistry()
+g = Gauge(metricPrefix + 'last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
+g.set_to_current_time()
+l = Gauge(metricPrefix + 'total_seconds', 'Total number of seconds to complete job', registry=registry)
+l.set(jobTime)
+t = Gauge(metricPrefix + 'total_records_total', 'Total number of records processed in last batch', registry=registry)
+t.set(total)
 
-    push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)
+push_to_gateway(os.environ['PUSHGATEWAY'], job=jobName, registry=registry)
