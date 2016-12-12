@@ -207,7 +207,12 @@ Best practices for testing in a Openshift DEV environment, then promoting to and
 - Finish release using `git flow release finish vX.Y.Z`
 - Verify that PROD app `deployment-branch==master`
 - Push to PROD
-- Monitor queues regularly for next 8 hours, then next 2 mornings, to ensure proper data flow 
+- Monitor queues regularly for next 8 hours, then next 2 mornings, to ensure proper data flow
+
+## Rollback procedure
+
+- Set deployment branch to previous stable release `rhc app-configure dwmops -n PRODUCTION_NAMESPACE --deployment-branch vA.B.C`
+- `git push`
 
 # TODO
 - Build an API operating off the same MongoDB
