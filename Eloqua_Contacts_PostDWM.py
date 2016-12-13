@@ -84,6 +84,7 @@ if size>0:
                 total += row['count']
                 if row['status']=='success':
                     success += row['count']
+                    logging.info("Sync finished with status 'success': " + str(row['count']) + " records; " + row['uri'])
                 if row['status'] == 'warning':
                     warning += row['count']
                     logging.info("Sync finished with status 'warning': " + str(row['count']) + " records; " + row['uri'])
