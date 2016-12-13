@@ -1,3 +1,6 @@
+## 2016-12-13 v0.2.0a
+- Added logging on import syncs to record URI for successful syncs - to check for evidence if the sync actions are not working properly
+
 ## 2016-12-06 v0.2.0
 - Added handling to account for dev/prod environments (didn't have an easy way, outside of manual adjustments, to test in DEV without posting data to PROD)
 - Upgraded `pyqm=v0.0.6`
