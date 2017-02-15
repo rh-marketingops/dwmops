@@ -58,6 +58,9 @@ def CleanZipcodeUS(data, histObj):
 
 def CleanAnnualRevenue(data, histObj):
 
+    if 'annualRevenue' not in data.keys():
+        return data, histObj
+
     annualRevenueOld = data['annualRevenue']
 
     annualRevenueNew = annualRevenueOld
