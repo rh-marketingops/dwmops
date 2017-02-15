@@ -1,4 +1,4 @@
-dwm==0.0.7
+dwm==0.0.8
 prometheus-client==0.0.14
 pyeloqua==0.3.2
 PyExecJS==1.4.0
