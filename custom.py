@@ -28,23 +28,24 @@ def __TEMPLATEFCN__(data, histObj):
 
 def CleanZipcodeUS(data, histObj):
 
-    if 'zipPostalCode' in data.keys():
+    if 'zipPostalCode' not in data.keys():
+        return data, histObj
 
-        zipOld = data['zipPostalCode']
+    zipOld = data['zipPostalCode']
 
-        zipNew = zipOld
+    zipNew = zipOld
 
-        if data['country']=='US' and zipNew!='':
+    if data['country']=='US' and zipNew!='':
 
-            zipNew = re.split('[^0-9]', zipNew)[0]
-            zipNew = zipNew[:5]
-            zipNew = zipNew.zfill(5)
+        zipNew = re.split('[^0-9]', zipNew)[0]
+        zipNew = zipNew[:5]
+        zipNew = zipNew.zfill(5)
 
-            data['zipPostalCode'] = zipNew
+        data['zipPostalCode'] = zipNew
 
-        change = _CollectHistory_(lookupType='UDF-CleanZipcodeUS', fromVal=zipOld, toVal=zipNew)
+    change = _CollectHistory_(lookupType='UDF-CleanZipcodeUS', fromVal=zipOld, toVal=zipNew)
 
-        histObjUpd = _CollectHistoryAgg_(contactHist=histObj, fieldHistObj=change, fieldName='zipPostalCode')
+    histObjUpd = _CollectHistoryAgg_(contactHist=histObj, fieldHistObj=change, fieldName='zipPostalCode')
 
     return data, histObj
 
