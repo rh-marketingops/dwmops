@@ -138,7 +138,7 @@ Current implementation has two custom functions:
 
 ## Gears
 
-This implementation use ITOS (Red Hat IT-Hosted Openshift v2; comparable to Openshift Enterprise). Using the Openshift PaaS is, in this case, not the best use of it's capabilities as this implementation has no API capabilities, nor any other need to have running web services. But, it is a good rapid deployment solution in that it's fast and consistent in setup.
+This implementation use ITOS (Red Hat IT-Hosted Openshift v2; comparable to Openshift Enterprise). Using the Openshift PaaS is a good rapid deployment solution in that it's fast and consistent in setup.
 
 ### Python
 
@@ -164,6 +164,55 @@ This implementation use ITOS (Red Hat IT-Hosted Openshift v2; comparable to Open
 - 10GB storage
 
 ### Cron
+
+# Testing and Deployment
+
+Best practices for testing in a Openshift DEV environment, then promoting to and Openshift PROD environment.
+
+## Testing in DEV
+
+- Test under database load by replicating prod DB
+  + New features interacting with MongoDB may require additional indexing; testing with a full data replication has a greater chance of catching these issues
+  1. Establish port forward to PROD:
+    ```
+    rhc port-forward dwmops -n PRODUCTION_NAMESPACE
+    ```
+  2. In a separate terminal:
+    ```
+    mongodump --port 12345
+    ```
+  3. Kill original port forward
+  4. Establish port forward to DEV:
+    ```
+    rhc port-forward dwmops -n DEV_NAMESPACE
+    ```
+  5. In a separate terminal:
+    ```
+    mongorestore
+    ```
+- Ensure `runscripts` are uncommented for non-PROD environments
+  + In DEV, `runscripts` for non-PROD should normally be commented out to avoid extra load on Eloqua's Bulk API  
+- Wait up to 2 hours for next load from Eloqua
+- Monitor queues via Prometheus to ensure proper flow
+- If testing features expecting a different return result, check sample data from the final queue and the `dwmdev.contactHistory` collection to ensure proper application of business rules
+
+## Deployment to PROD
+
+- SSH into the gear and manually comment out python command in `runscripts/halfhour_getdwm.sh`
+- Wait until all queues have been emptied
+- Manually backup MongoDB
+- Create a new release using `git flow release start vX.Y.Z`
+- Populate any relevant release notes in the `CHANGELOG.md`
+- Update the version in `setup.py`
+- Finish release using `git flow release finish vX.Y.Z`
+- Verify that PROD app `deployment-branch==master`
+- Push to PROD
+- Monitor queues regularly for next 8 hours, then next 2 mornings, to ensure proper data flow
+
+## Rollback procedure
+
+- Set deployment branch to previous stable release `rhc app-configure dwmops -n PRODUCTION_NAMESPACE --deployment-branch vA.B.C`
+- `git push`
 
 # TODO
 - Build an API operating off the same MongoDB

@@ -28,6 +28,9 @@ def __TEMPLATEFCN__(data, histObj):
 
 def CleanZipcodeUS(data, histObj):
 
+    if 'zipPostalCode' not in data.keys():
+        return data, histObj
+
     zipOld = data['zipPostalCode']
 
     zipNew = zipOld
@@ -54,6 +57,9 @@ def CleanZipcodeUS(data, histObj):
 #   - if 2 number strings, round into the closest upper bucket
 
 def CleanAnnualRevenue(data, histObj):
+
+    if 'annualRevenue' not in data.keys():
+        return data, histObj
 
     annualRevenueOld = data['annualRevenue']
 
