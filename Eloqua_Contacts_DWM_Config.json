@@ -72,20 +72,17 @@
         "1": {
           "type": "deriveIncludes",
           "fieldSet": ["emailAddress"],
-          "overwrite": false,
-          "blankIfNoMatch": false
+          "options": []
         },
         "2": {
           "type": "deriveValue",
           "fieldSet": ["visitorCountryIP"],
-          "overwrite": false,
-          "blankIfNoMatch": false
+          "options": []
         },
         "3": {
           "type": "deriveValue",
           "fieldSet": ["visitorCountryDNS"],
-          "overwrite": false,
-          "blankIfNoMatch": false
+          "options": []
         }
       }
     },
@@ -96,8 +93,7 @@
         "1": {
           "type": "copyValue",
           "fieldSet": ["companyDemandBase"],
-          "overwrite": false,
-          "blankIfNoMatch": false
+          "options": []
         }
       }
     },
@@ -108,8 +104,7 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["jobTitle"],
-          "overwrite": true,
-          "blankIfNoMatch": false
+          "options": ["overwrite"]
         }
       }
     },
@@ -120,8 +115,7 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["industryDemandBase"],
-          "overwrite": false,
-          "blankIfNoMatch": false
+          "options": []
         }
       }
     },
@@ -132,8 +126,7 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["annualRevenueDemandBase"],
-          "overwrite": false,
-          "blankIfNoMatch": false
+          "options": []
         }
       }
     },
@@ -144,8 +137,7 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["numberOfEmployeesDemandBase"],
-          "overwrite": false,
-          "blankIfNoMatch": false
+          "options": []
         }
       }
     },
@@ -161,14 +153,12 @@
         "1": {
           "type": "deriveIncludes",
           "fieldSet": ["jobTitle"],
-          "overwrite": true,
-          "blankIfNoMatch": false
+          "options": ["overwrite"]
         },
         "2": {
           "type": "deriveValue",
           "fieldSet": ["jobTitle"],
-          "overwrite": true,
-          "blankIfNoMatch": false
+          "options": ["overwrite"]
         }
       }
     },
@@ -179,8 +169,7 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["jobRole"],
-          "overwrite": true,
-          "blankIfNoMatch": false
+          "options": ["overwrite"]
         }
       }
     },
@@ -201,8 +190,7 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["jobRole", "department"],
-          "overwrite": true,
-          "blankIfNoMatch": true
+          "options": ["overwrite", "blankIfNoMatch"]
         }
       }
     },
@@ -213,8 +201,7 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["country"],
-          "overwrite": true,
-          "blankIfNoMatch": false
+          "options": ["overwrite"]
         }
       }
     },
@@ -225,8 +212,7 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["country"],
-          "overwrite": true,
-          "blankIfNoMatch": false
+          "options": ["overwrite", "blankIfNoMatch"]
         }
       }
     },
@@ -237,8 +223,7 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["annualRevenue", "numberOfEmployees"],
-          "overwrite": true,
-          "blankIfNoMatch": true
+          "options": ["overwrite", "blankIfNoMatch"]
         }
       }
     },
@@ -249,14 +234,12 @@
         "2": {
           "type": "copyValue",
           "fieldSet": ["industry"],
-          "overwrite": true,
-          "blankIfNoMatch": false
+          "options": ["overwrite"]
         },
         "1": {
           "type": "deriveIncludes",
           "fieldSet": ["emailAddress"],
-          "overwrite": true,
-          "blankIfNoMatch": false
+          "options": ["overwrite"]
         }
       }
     },
@@ -267,14 +250,12 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["zipPostalCode", "country"],
-          "overwrite": true,
-          "blankIfNoMatch": true
+          "options": ["overwrite", "blankIfNoMatch"]
         },
         "2": {
           "type": "deriveValue",
           "fieldSet": ["city", "stateProvince", "country"],
-          "overwrite": true,
-          "blankIfNoMatch": true
+          "options": ["overwrite", "blankIfNoMatch"]
         }
       }
     },
@@ -285,14 +266,12 @@
         "1": {
           "type": "deriveValue",
           "fieldSet": ["zipPostalCode", "country"],
-          "overwrite": true,
-          "blankIfNoMatch": true
+          "options": ["overwrite", "blankIfNoMatch"]
         },
         "2": {
           "type": "deriveValue",
           "fieldSet": ["city", "stateProvince", "country"],
-          "overwrite": true,
-          "blankIfNoMatch": true
+          "options": ["overwrite", "blankIfNoMatch"]
         }
       }
     }

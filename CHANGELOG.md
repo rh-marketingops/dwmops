@@ -1,3 +1,10 @@
+## 2017-02-15 v0.2.1
+- Add exception handling to custom cleaning functions (`CleanZipcodeUS`, `CleanAnnualRevenue`)
+- A temporary error in the Eloqua Bulk API caused some fields to not be exported in the standard pull
+- This resulted in that set of records erroring out and temporarily getting stuck in the processing queue
+- The rest of the DWM is robust enough to handle that kind of error; these custom functions were not 
+- Change hardcoded dict config values in Elouqa Contacts DWM config for derive to a list
+
 ## 2016-12-13 v0.2.0a
 - Added logging on import syncs to record URI for successful syncs - to check for evidence if the sync actions are not working properly
 
