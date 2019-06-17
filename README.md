@@ -102,7 +102,7 @@ Current implementation has two custom functions:
   - *last_success_unixtime*: Last time of successful run
   - *total_seconds*: # of seconds to complete entire script
   - *total_records_total*: # of records processed
-  - *total_records_errored*: # of records from batches which received an an error on import
+  - *total_records_errored*: # of records from batches which received an error on import
   - *total_records_warning*: # of records from batches which received a warning on import
   - *total_records_success*: # of records which successfully imported to Eloqua
 
@@ -116,7 +116,7 @@ Current implementation has two custom functions:
   - *last_success_unixtime*: Last time of successful run
   - *total_seconds*: # of seconds to complete entire script
   - *total_records_total*: # of records processed
-  - *total_records_errored*: # of records from batches which received an an error on import
+  - *total_records_errored*: # of records from batches which received an error on import
   - *total_records_warning*: # of records from batches which received a warning on import
   - *total_records_success*: # of records which successfully imported to Eloqua
 
@@ -130,7 +130,7 @@ Current implementation has two custom functions:
   - *last_success_unixtime*: Last time of successful run
   - *total_seconds*: # of seconds to complete entire script
   - *total_records_total*: # of records processed
-  - *total_records_errored*: # of records from batches which received an an error on import
+  - *total_records_errored*: # of records from batches which received an error on import
   - *total_records_warning*: # of records from batches which received a warning on import
   - *total_records_success*: # of records which successfully imported to Eloqua
 
